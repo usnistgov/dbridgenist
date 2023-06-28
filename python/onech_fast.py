@@ -16,10 +16,10 @@ data = []
 start_time = time.time()
 REF = 4.73
 
-def addData(time, fn):
+def addData(time1, fn):
     global data
     
-    while time.time() < start_time + time:
+    while time.time() < start_time + time1:
         now = time.time()-start_time
         if data:
             val = data[0]
@@ -27,12 +27,12 @@ def addData(time, fn):
                 f.write('{0:15.5f} {1:14.11f}\n'.format(now,val))
             data = []
             
-def getData(time):
+def getData(time1):
     global data
     ADC = ADS1263.ADS1263()
     ADC.ADS1263_SetMode(0)
     
-    while time.time() < start_time + time:
+    while time.time() < start_time + time1:
         ADC_Value = ADC.ADS1263_GetChannalValue(0)
         if(ADC_Value>>31 ==1):
             val=REF*2 - ADC_Value * REF / 0x80000000

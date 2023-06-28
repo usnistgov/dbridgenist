@@ -48,3 +48,9 @@ secs = int(time[0])*3600 + int(time[1])*60 + int(time[2])
 
 t1 = threading.Thread(target=getData, args=(secs,))
 t2 = threading.Thread(target=addData, args=(secs, str(time)+'.dat',))
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()

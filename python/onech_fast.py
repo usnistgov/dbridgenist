@@ -30,6 +30,8 @@ def addData(time1, fn):
 def getData(time1):
     global data
     ADC = ADS1263.ADS1263()
+    if (ADC.ADS1263_init_ADC1('ADS1263_38400SPS') == -1):
+		exit()
     ADC.ADS1263_SetMode(0)
     
     while time.time() < start_time + time1:

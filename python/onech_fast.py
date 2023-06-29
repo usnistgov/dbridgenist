@@ -22,9 +22,9 @@ def addData(time1, fn):
     while time.time() < start_time + time1:
         now = time.time()-start_time
         if data:
-            val = data[0]
             with open(fn, 'a') as f:
-                f.write('{0:15.5f} {1:14.11f}\n'.format(now,val))
+                for val in data:
+                    f.write('{0:15.5f} {1:14.11f}\n'.format(now,val))
             data = []
             
 def getData(time1):

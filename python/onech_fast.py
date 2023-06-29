@@ -42,12 +42,12 @@ def getData(time1):
         data.append(val)
         
 
-time = input("Time (hh:mm:ss): ")
-time = time.split(':')
-secs = int(time[0])*3600 + int(time[1])*60 + int(time[2])
+run_time = input("Time (hh:mm:ss): ")
+run_time = run_time.split(':')
+secs = int(run_time[0])*3600 + int(run_time[1])*60 + int(run_time[2])
 
 t1 = threading.Thread(target=getData, args=(secs,))
-t2 = threading.Thread(target=addData, args=(secs, str(time)+'.dat',))
+t2 = threading.Thread(target=addData, args=(secs, str(run_time)+'.dat',))
 
 t1.start()
 t2.start()

@@ -28,7 +28,13 @@ def addData(time1, fn):
             writing = True
             with open(fn, 'a') as f:
                 for val in data:
-                    f.write('{0:15.5f} {1:14.11f}\n'.format(val[0],val[1]))
+                    ACC_Value=val[1]
+                    if(ADC_Value>>31 ==1):
+                        val_fl=REF*2 - ADC_Value * REF / 0x80000000
+                    else:
+                        val_fl=ADC_Value * REF / 0x7fffffff
+
+                    f.write('{0:15.5f} {1:14.11f}\n'.format(val[0],val_fl))
             data = temp
             temp = []
             writing = False
@@ -42,20 +48,19 @@ def getData(time1):
     if (ADC.ADS1263_init_ADC1('ADS1263_38400SPS') == -1):
 	    exit()
     ADC.ADS1263_SetMode(0)
+    ADC.ADS1263_SetChannal(0)
+
     
     start_time = time.time()
 
     while time.time() < start_time + time1:
-        ADC_Value = ADC.ADS1263_GetChannalValue(0)
-        #ADC_Value= 0x7ffffff
-        if(ADC_Value>>31 ==1):
-            val=REF*2 - ADC_Value * REF / 0x80000000
-        else:
-            val=ADC_Value * REF / 0x7ffffff
+        ADC.ADS1263_WaitDRDY()
+        REF =4.73
+        ADC_Value = ADC.ADS1263_Read_ADC_Data()
         if not writing:
-            data.append([time.time()-start_time, val])
+            data.append([time.time()-start_time, ADC_Value])
         else:
-            temp.append([time.time()-start_time, val])
+            temp.append([time.time()-start_time, ADC_Value])
 
 
 run_time = input("Time (hh:mm:ss): ")

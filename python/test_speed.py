@@ -30,7 +30,7 @@ for i in range(int(n)):
     if(ADC_Value>>31 ==1):
         val=REF*2 - ADC_Value * REF / 0x80000000
     else:
-        val=ADC_Value * REF / 0x7ffffff
+        val=ADC_Value * REF / 0x7fffffff
     values.append(val)
 
     times.append(time.time()-start_time)

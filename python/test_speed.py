@@ -25,8 +25,13 @@ for i in range(int(n)):
     start_time = time.time()
     
     ADC.ADS1263_WaitDRDY()
-    value = ADC.ADS1263_Read_ADC_Data()
-    values.append(value)
+    REF =4.73
+    ADC_Value = ADC.ADS1263_Read_ADC_Data()
+    if(ADC_Value>>31 ==1):
+        val=REF*2 - ADC_Value * REF / 0x80000000
+    else:
+        val=ADC_Value * REF / 0x7ffffff
+    values.append(val)
 
     times.append(time.time()-start_time)
     

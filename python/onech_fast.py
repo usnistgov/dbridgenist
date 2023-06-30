@@ -46,7 +46,8 @@ def getData(time1):
     start_time = time.time()
 
     while time.time() < start_time + time1:
-        ADC_Value = ADC.ADS1263_GetChannalValue(0)
+        #ADC_Value = ADC.ADS1263_GetChannalValue(0)
+        ADC_Value= 0x7ffffff
         if(ADC_Value>>31 ==1):
             val=REF*2 - ADC_Value * REF / 0x80000000
         else:

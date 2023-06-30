@@ -25,12 +25,10 @@ def addData(time1, fn):
 
     while time.time() < start_time + time1:
         if data:
-<<<<<<< HEAD
             with open(fn, 'a') as f:
                 for val in data:
                     f.write('{0:15.5f} {1:14.11f}\n'.format(now,val))
             data = []
-=======
             writing = True
             with open(fn, 'a') as f:
                 for val in data:
@@ -38,7 +36,6 @@ def addData(time1, fn):
             data = temp
             temp = []
             writing = False
->>>>>>> 4613e40beebaa7d844ce9531d962a1adace398a1
             
 def getData(time1):
     global data
@@ -66,6 +63,7 @@ def getData(time1):
 
 run_time = input("Time (hh:mm:ss): ")
 name = run_time
+name = name.replace(':', '-')
 run_time = run_time.split(':')
 secs = int(run_time[0])*3600 + int(run_time[1])*60 + int(run_time[2])
 

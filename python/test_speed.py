@@ -14,8 +14,14 @@ if (ADC.ADS1263_init_ADC1('ADS1263_38400SPS') == -1):
     exit()
 ADC.ADS1263_SetMode(0)
 
-start_time = time.time()
+times = []
+n = input("n: ")
 
-ADC.ADS1263_WaitDRDY()
+for i in range(int(n)):
+    start_time = time.time()
 
-print(time.time()-start_time)
+    ADC.ADS1263_WaitDRDY()
+
+    times.append(time.time()-start_time)
+    
+print(sum(times)/len(times))

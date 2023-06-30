@@ -16,8 +16,6 @@ ADC.ADS1263_SetMode(0)
 
 start_time = time.time()
 
-ADC.ADS1263_SetChannal(0)
 ADC.ADS1263_WaitDRDY()
-Value = ADC.ADS1263_Read_ADC_Data()
 
-print(start_time-time.time())
+print(time.time()-start_time)

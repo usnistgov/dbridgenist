@@ -28,11 +28,10 @@ def addData(time1, fn):
             writing = True
             with open(fn, 'a') as f:
                 for val in data:
-                    ACC_Value=val[1]
-                    if(ADC_Value>>31 ==1):
-                        val_fl=REF*2 - ADC_Value * REF / 0x80000000
+                    if(val[1]>>31 ==1):
+                        val_fl=REF*2 - val[1] * REF / 0x80000000
                     else:
-                        val_fl=ADC_Value * REF / 0x7fffffff
+                        val_fl=val[1] * REF / 0x7fffffff
 
                     f.write('{0:15.5f} {1:14.11f}\n'.format(val[0],val_fl))
             data = temp

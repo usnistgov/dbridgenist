@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Jun 29 11:15:29 2023
-
+Modified now
 @author: wbalance
 """
+
 
 import time
 import ADS1263

@@ -13,7 +13,7 @@ ADC = ADS1263.ADS1263()
 if (ADC.ADS1263_init_ADC1('ADS1263_38400SPS') == -1):
     exit()
 ADC.ADS1263_SetMode(0)
-ADC.SetChannal(0)
+ADC.ADS1263_SetChannal(0)
 
 times = []
 n = input("n: ")

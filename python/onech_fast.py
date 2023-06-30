@@ -15,7 +15,7 @@ import threading
 data = []
 temp = []
 start_time = time.time()
-REF = 4.5
+REF = 4.73
 writing = False
 
 def addData(time1, fn):
@@ -25,10 +25,6 @@ def addData(time1, fn):
 
     while time.time() < start_time + time1:
         if data:
-            with open(fn, 'a') as f:
-                for val in data:
-                    f.write('{0:15.5f} {1:14.11f}\n'.format(now,val))
-            data = []
             writing = True
             with open(fn, 'a') as f:
                 for val in data:

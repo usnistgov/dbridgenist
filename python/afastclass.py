@@ -19,7 +19,7 @@ if not simulate:
         exit()
     ADC.ADS1263_SetMode(0)
     ADC.ADS1263_SetChannal(0)
-
+ 
 data = []
 ts   = []
 start_time = time.time()
@@ -111,8 +111,11 @@ def getData():
         t2 =  time.time()    
         rt = 0.5*(t1+t2)-t0
     else:
+        t1 = time.time()
         ADC.ADS1263_WaitDRDY()
         meas = ADC.ADS1263_Read_ADC_Data()
+        t2 = time.time()
+        rt = 0.5*(t1+t2)-t0
     data.append(meas)
     ts.append(rt)
 

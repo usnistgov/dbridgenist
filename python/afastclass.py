@@ -29,12 +29,12 @@ dt = 0.01
 end = False
 N =10
 minN=5
-chunkN=100
 
 sim_a = 1
 sim_o = 2
 sim_p =np.pi/4
 sim_f = 1
+chunkN = 1.0/float(sim_f)/dt
 t0= time.time()
 sim_vnoise =1e-3
 
@@ -62,7 +62,37 @@ def fit_sine(t,y,T0):
     phi = np.arctan2(fit_pars[1,0],fit_pars[2,0])
     return amp,phi,C2
 
-
+def find_f(data,dt,T0guess=0.1,dT=0,plot=False):
+    if dT==0:
+        dT = T0guess/10
+    #print(T0guess, dT)
+    C2a=[]
+    TT = np.linspace(T0guess-dT,T0guess+dT)
+    for T in TT:
+        _,_,C2 = fit_sine(data, dt, T)
+        C2a.append(C2)
+    C2a= np.array(C2a)
+    minC2 = np.min(C2a)
+    pf = np.polyfit(TT,C2a,2)
+    minT = -pf[1]/(2*pf[0])
+    miny =np.poly1d(pf)(minT)
+    if plot:
+        fig,ax = plt.subplots(1)
+        ax.plot(TT,C2a,'ro')
+        ax.plot(minT,miny,'ks')
+        ax.plot(TT[np.argmin(C2a)],minC2,'bD')
+    
+    if miny> minC2:
+        minT = TT[np.argmin(C2a)]
+        return find_f(data,dt,minT,dT/2,plot)
+   
+    if minT>T0guess+dT or minT<T0guess-dT:
+        return find_f(data,dt,minT,dT,plot)
+    if dT>1e-3:
+        return find_f(data,dt,minT,dT/2,plot)
+    if minT<0:
+        return find_f(data,dt,-minT,dT/2,plot)
+    return minT
 
 def addData(fn):
     global data, writing, temp, end
@@ -90,7 +120,10 @@ def addData(fn):
                 #meas=data.pop(0)
             mytime=np.array(mytime)
             mydata=np.array(mydata)
-            a,phi,c2=fit_sine(mytime,mydata,1.0/sim_f)
+            if simulate:
+                a,phi,c2=fit_sine(mytime,mydata,1.0/sim_f)
+            else:
+                a, phi, c2 = fit_sine(mytime,mydata, find_f(mydata, mytime[-1]/len(mytime)))
             meantime = np.mean(mytime)
             s='{0:11.6f} {1:11.8f} {2:9.6f} {3:7.4e}\n'.format(meantime,a,phi,c2)
             f.write(s)

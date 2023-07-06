@@ -118,7 +118,7 @@ def addData(fn):
             mydata =[]
             while co<chunkN:
                 co+=1
-                meas = int2float(int(data.pop(0)))
+                meas = int2float(int(data.pop(0)), REF)
                 mytime.append(ts.pop(0))
                 mydata.append(meas)
                 #meas=data.pop(0)

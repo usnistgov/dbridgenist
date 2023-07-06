@@ -9,6 +9,7 @@ Created on Wed Jun 28 13:40:03 2023
 import time
 import numpy as np
 import threading
+import matplotlib.pyplot as plt
 
 simulate=True
 if not simulate:
@@ -62,14 +63,14 @@ def fit_sine(t,y,T0):
     phi = np.arctan2(fit_pars[1,0],fit_pars[2,0])
     return amp,phi,C2
 
-def find_f(data,dt,T0guess=0.1,dT=0,plot=False):
+def find_f(data,dt,t,T0guess=0.1,dT=0,plot=False):
     if dT==0:
         dT = T0guess/10
     #print(T0guess, dT)
     C2a=[]
     TT = np.linspace(T0guess-dT,T0guess+dT)
     for T in TT:
-        _,_,C2 = fit_sine(data, dt, T)
+        _,_,C2 = fit_sine(data, t, T)
         C2a.append(C2)
     C2a= np.array(C2a)
     minC2 = np.min(C2a)
@@ -84,14 +85,14 @@ def find_f(data,dt,T0guess=0.1,dT=0,plot=False):
     
     if miny> minC2:
         minT = TT[np.argmin(C2a)]
-        return find_f(data,dt,minT,dT/2,plot)
+        return find_f(data,dt,t,minT,dT/2,plot)
    
     if minT>T0guess+dT or minT<T0guess-dT:
-        return find_f(data,dt,minT,dT,plot)
+        return find_f(data,dt,t,minT,dT,plot)
     if dT>1e-3:
-        return find_f(data,dt,minT,dT/2,plot)
+        return find_f(data,dt,t,minT,dT/2,plot)
     if minT<0:
-        return find_f(data,dt,-minT,dT/2,plot)
+        return find_f(data,dt,t,-minT,dT/2,plot)
     return minT
 
 
@@ -127,7 +128,7 @@ def addData(fn):
             if simulate:
                 a,phi,c2=fit_sine(mytime,mydata,1.0/sim_f)
             else:
-                a, phi, c2 = fit_sine(mytime,mydata, find_f(mydata, mytime[-1]/len(mytime)))
+                a, phi, c2 = fit_sine(mytime,mydata, find_f(mydata, mytime[-1]/len(mytime), mytime))
             meantime = np.mean(mytime)
             s='{0:11.6f} {1:11.8f} {2:9.6f} {3:7.4e}\n'.format(meantime,a,phi,c2)
             f.write(s)

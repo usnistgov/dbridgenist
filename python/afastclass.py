@@ -115,6 +115,8 @@ def float2int(meas,REF):
 def getData():
     t1 = threading.Timer(dt,getData)
     t1.start()
+    now = time.time()
+    rt = now - t0
     if simulate:
         t1 =  time.time()    
         meas = sim_o+sim_a*np.cos(2*np.pi*sim_f*rt+sim_p)+\

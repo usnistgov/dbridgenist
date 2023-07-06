@@ -28,7 +28,7 @@ ts   = []
 start_time = time.time()
 REF = 4.73
 writing = False
-dt = 0.01
+dt = 0.001
 end = False
 N =10
 minN=5
@@ -37,7 +37,10 @@ sim_a = 1
 sim_o = 2
 sim_p =np.pi/4
 sim_f = 1
-chunkN = 1.0/float(sim_f)/dt
+if simulate:
+    chunkN = 1.0/float(sim_f)/dt
+else:
+    chunkN = 1.0/float(freq)/dt
 t0= time.time()
 sim_vnoise =1e-3
 

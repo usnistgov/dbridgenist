@@ -12,7 +12,18 @@ import threading
 import matplotlib.pyplot as plt
 import os
 
-simulate=bool(input("Simulate? "))
+done = False
+while not done:
+    simulate=input("Simulate? ")
+    if simulate.lower() == "y" or simulate.lower() == "yes" or simulate.lower() == "true":
+        simulate = True
+        done  = True
+    elif simulate.lower() == "n" or simulate.lower() == "no" or simulate.lower() == "false":
+        simulate = False
+        done = True
+    else:
+        print("Invalid")
+
 if not simulate:
     freq = float(input("Frequency: "))
     import ADS1263

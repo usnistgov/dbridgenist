@@ -65,39 +65,6 @@ def fit_sine(t,y,T0):
     phi = np.arctan2(fit_pars[1,0],fit_pars[2,0])
     return amp,phi,C2,fit_vals
 
-def find_f(data,dt,t,T0guess=0.1,dT=0,plot=False):
-    if dT==0:
-        dT = T0guess/10
-    #print(T0guess, dT)
-    C2a=[]
-    TT = np.linspace(T0guess-dT,T0guess+dT)
-    for T in TT:
-        _,_,C2,_ = fit_sine(data, t, T)
-        C2a.append(C2)
-    C2a= np.array(C2a)
-    minC2 = np.min(C2a)
-    pf = np.polyfit(TT,C2a,2)
-    minT = -pf[1]/(2*pf[0])
-    miny =np.poly1d(pf)(minT)
-    if plot:
-        fig,ax = plt.subplots(1)
-        ax.plot(TT,C2a,'ro')
-        ax.plot(minT,miny,'ks')
-        ax.plot(TT[np.argmin(C2a)],minC2,'bD')
-    
-    if miny> minC2:
-        minT = TT[np.argmin(C2a)]
-        return find_f(data,dt,t,minT,dT/2,plot)
-   
-    if minT>T0guess+dT or minT<T0guess-dT:
-        return find_f(data,dt,t,minT,dT,plot)
-    if dT>1e-3:
-        return find_f(data,dt,t,minT,dT/2,plot)
-    if minT<0:
-        return find_f(data,dt,t,-minT,dT/2,plot)
-    return minT
-
-
 def int2float(meas,REF):
     if meas >> 31 == 1: 
         ret =  REF*2  - meas * REF / 0x80000000
@@ -127,16 +94,10 @@ def addData(fn):
                 #meas=data.pop(0)
             mytime=np.array(mytime)
             mydata=np.array(mydata)
-            fig, ax = plt.subplots()
-            ax.plot(mytime, mydata, 'r.')
             if simulate:
                 a,phi,c2,vals=fit_sine(mytime,mydata,1.0/sim_f)
             else:
                 a, phi, c2,vals = fit_sine(mytime,mydata,1.0/freq)
-            ax.plot(mytime, vals, 'k-')
-            dir = r'/media/wbalance/SCHLAMMI'
-            fn = 'test.png'
-            fig.savefig(os.path.join(dir,fn))
             meantime = np.mean(mytime)
             s='{0:11.6f} {1:11.8f} {2:9.6f} {3:7.4e}\n'.format(meantime,a,phi,c2)
             f.write(s)

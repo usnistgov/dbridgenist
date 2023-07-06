@@ -10,9 +10,11 @@ import time
 import numpy as np
 import threading
 import matplotlib.pyplot as plt
+import os
 
-simulate=True
+simulate=False
 if not simulate:
+    freq = float(input("Frequency: "))
     import ADS1263
     import RPi.GPIO as GPIO
     ADC = ADS1263.ADS1263()
@@ -61,7 +63,7 @@ def fit_sine(t,y,T0):
     #off = fit_pars[0,0]
     amp = np.sqrt(fit_pars[1,0]**2+fit_pars[2,0]**2)
     phi = np.arctan2(fit_pars[1,0],fit_pars[2,0])
-    return amp,phi,C2
+    return amp,phi,C2,fit_vals
 
 def find_f(data,dt,t,T0guess=0.1,dT=0,plot=False):
     if dT==0:
@@ -70,7 +72,7 @@ def find_f(data,dt,t,T0guess=0.1,dT=0,plot=False):
     C2a=[]
     TT = np.linspace(T0guess-dT,T0guess+dT)
     for T in TT:
-        _,_,C2 = fit_sine(data, t, T)
+        _,_,C2,_ = fit_sine(data, t, T)
         C2a.append(C2)
     C2a= np.array(C2a)
     minC2 = np.min(C2a)
@@ -125,10 +127,16 @@ def addData(fn):
                 #meas=data.pop(0)
             mytime=np.array(mytime)
             mydata=np.array(mydata)
+            fig, ax = plt.subplots()
+            ax.plot(mytime, mydata, 'r.')
             if simulate:
-                a,phi,c2=fit_sine(mytime,mydata,1.0/sim_f)
+                a,phi,c2,vals=fit_sine(mytime,mydata,1.0/sim_f)
             else:
-                a, phi, c2 = fit_sine(mytime,mydata, find_f(mydata, mytime[-1]/len(mytime), mytime))
+                a, phi, c2,vals = fit_sine(mytime,mydata,1.0/freq)
+            ax.plot(mytime, vals, 'k-')
+            dir = r'/media/wbalance/SCHLAMMI'
+            fn = 'test.png'
+            fig.savefig(os.path.join(dir,fn))
             meantime = np.mean(mytime)
             s='{0:11.6f} {1:11.8f} {2:9.6f} {3:7.4e}\n'.format(meantime,a,phi,c2)
             f.write(s)

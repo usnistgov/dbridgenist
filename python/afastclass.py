@@ -94,6 +94,14 @@ def find_f(data,dt,T0guess=0.1,dT=0,plot=False):
         return find_f(data,dt,-minT,dT/2,plot)
     return minT
 
+
+def int2float(meas,REF):
+    if meas >> 31 == 1: 
+        ret =  REF*2  - meas * REF / 0x80000000
+    elif meas >> 31 != 1:
+        ret =  meas * REF / 0x7fffffff
+    return ret
+
 def addData(fn):
     global data, writing, temp, end
 
@@ -110,11 +118,7 @@ def addData(fn):
             mydata =[]
             while co<chunkN:
                 co+=1
-                meas = data.pop(0)
-                if meas >> 31 == 1 and not simulate:
-                    meas = REF*2 - meas * REF / 0x80000000
-                elif meas >> 31 != 1 and not simulate:
-                    meas = meas * REF / 0x7fffffff
+                meas = int2float(int(data.pop(0)))
                 mytime.append(ts.pop(0))
                 mydata.append(meas)
                 #meas=data.pop(0)
@@ -131,16 +135,21 @@ def addData(fn):
         #print(co)
         #print('datalen={0} dt mean={1:5.4} ms'.format(len(tmp),1000*np.mean(tmp)))
 
+def float2int(meas,REF):
+    if meas>=0:
+        ret = int(meas/REF*0x7fffffff)
+    else:
+        ret = int(-meas/REF*0x80000000)
+    return ret
+
 def getData():
     t1 = threading.Timer(dt,getData)
-    t1.start()   
-    
-    now = time.time()    
-    rt = now - t0
+    t1.start()
     if simulate:
         t1 =  time.time()    
         meas = sim_o+sim_a*np.cos(2*np.pi*sim_f*rt+sim_p)+\
             np.random.normal(scale=sim_vnoise)
+        meas = float2int(meas,REF)
         t2 =  time.time()    
         rt = 0.5*(t1+t2)-t0
     else:

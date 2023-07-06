@@ -12,7 +12,7 @@ import threading
 import matplotlib.pyplot as plt
 import os
 
-simulate=False
+simulate=bool(input("Simulate? "))
 if not simulate:
     freq = float(input("Frequency: "))
     import ADS1263

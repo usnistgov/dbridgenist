@@ -95,7 +95,7 @@ def addData(fn):
     t1 = threading.Timer(N*dt,addData, args=('test.dat',))
     t1.start()
     co=0
-    bd = r'./'
+    bd = r'./chunks'
     
     if len(data)<chunkN+minN:
         return

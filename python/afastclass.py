@@ -96,6 +96,8 @@ def addData(fn):
     t1.start()
     co=0
     bd = r'./chunks'
+    if not os.path.exists(bd):
+        os.makedirs(bd)
     
     if len(data)<chunkN+minN:
         return

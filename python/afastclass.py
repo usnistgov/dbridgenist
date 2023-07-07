@@ -54,7 +54,7 @@ gco = 1
 #    chunkN = 1.0/float(sim_f)/dt
 #else:
 #    chunkN = 1.0/float(freq)/dt
-chunkN = 100
+chunkN = 500
 t0= time.time()
 sim_vnoise =1e-3
 

@@ -95,6 +95,7 @@ def addData(fn):
     t1 = threading.Timer(N*dt,addData, args=('test.dat',))
     t1.start()
     co=0
+    bd = r'./'
     
     if len(data)<chunkN+minN:
         return
@@ -113,7 +114,7 @@ def addData(fn):
                 #meas=data.pop(0)
             mytime=np.array(mytime)
             mydata=np.array(mydata)
-            with open('test{0:03}.dat'.format(gco), 'a') as f2:
+            with open(os.path.join(bd,'test{0:03}.dat'.format(gco)), 'a') as f2:
                 for a,b in zip(mytime, mydata):
                     f2.write('{0:.6}{1:10.6f}\n'.format(a,b))            
             gco = gco+1

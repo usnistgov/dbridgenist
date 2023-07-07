@@ -44,8 +44,8 @@ try:
                 else:
                     print("ADC1 IN%d = %lf" %(i, (ADC_Value[i] * REF / 0x7fffffff)))   # 32bit
                     data_y.append(ADC_Value[i] * REF / 0x7fffffff)
-            #for i in channelList:
-               # print("\33[2A")
+            for i in channelList:
+                print("\33[2A")
         
     elif(TEST_ADC2):
         if (ADC.ADS1263_init_ADC2('ADS1263_ADC2_400SPS') == -1):

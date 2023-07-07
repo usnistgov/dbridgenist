@@ -43,7 +43,7 @@ dt = 0.005
 end = False
 N =10
 minN=5
-gain = 1.0277711
+gain = 1.013654
 
 sim_a = 1
 sim_o = 1
@@ -113,7 +113,7 @@ def addData(fn):
             while co<chunkN:
                 co+=1
                 if not simulate:
-                    meas = int2float(int(data.pop(0)), REF)/gain
+                    meas = (int2float(int(data.pop(0)), REF)-0.0141172)/gain
                 else:
                     meas = data.pop(0)
                 mytime.append(ts.pop(0))

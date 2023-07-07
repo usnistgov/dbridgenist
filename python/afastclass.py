@@ -104,7 +104,7 @@ def addData(fn):
                 co+=1
                 meas = int2float(int(data.pop(0)), REF)
                 with open('test2.dat', 'a') as f2:
-                    f2.write('{0:.6f}'.format(meas))
+                    f2.write('{0:.6}{1:10.6f}'.format(ts[0],meas))
                 mytime.append(ts.pop(0))
                 mydata.append(meas)
                 #meas=data.pop(0)

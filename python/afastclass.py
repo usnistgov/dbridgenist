@@ -112,7 +112,7 @@ def addData(fn):
             while co<chunkN:
                 co+=1
                 if not simulate:
-                    meas = int2float(int(data.pop(0)), REF)
+                    meas = int2float(int(data.pop(0)), REF)/1.091632
                 else:
                     meas = data.pop(0)
                 mytime.append(ts.pop(0))

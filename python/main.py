@@ -5,6 +5,7 @@ import time
 import ADS1263
 import RPi.GPIO as GPIO
 import matplotlib.pyplot as plt
+import numpy as np
 
 REF = 5.08          # Modify according to actual voltage
                     # external AVDD and AVSS(Default), or internal 2.5V
@@ -102,4 +103,6 @@ except KeyboardInterrupt:
     ADC.ADS1263_Exit()
     plt.scatter(data_x,data_y)
     plt.show()
+    data_y = np.array(data_y)
+    print(np.mean(data_y))
     exit()

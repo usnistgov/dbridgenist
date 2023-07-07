@@ -45,7 +45,7 @@ N =10
 minN=5
 
 sim_a = 1
-sim_o = 2
+sim_o = 1
 sim_p =np.pi/4
 sim_f = 1
 gco = 1
@@ -57,6 +57,10 @@ gco = 1
 chunkN = 500
 t0= time.time()
 sim_vnoise =1e-3
+sim_anoise = 1e-1
+sim_onoise = 1e-3
+sim_pnoise = 0
+sim_fnoise = 0
 
 def fit_sine(t,y,T0):
     """
@@ -145,7 +149,10 @@ def getData():
     rt = now - t0
     if simulate:
         t1 =  time.time()    
-        meas = sim_o+sim_a*np.cos(2*np.pi*sim_f*rt+sim_p)+\
+        meas = (sim_o+np.random.normal(scale=sim_onoise))+\
+            (sim_a+np.random.normal(scale=sim_anoise))*\
+            np.cos(2*np.pi*(sim_f+np.random.normal(scale=sim_fnoise))*\
+            rt+(sim_p+np.random.normal(scale=sim_pnoise)))+\
             np.random.normal(scale=sim_vnoise)
         t2 =  time.time()    
         rt = 0.5*(t1+t2)-t0

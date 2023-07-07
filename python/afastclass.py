@@ -37,7 +37,7 @@ if not simulate:
 data = []
 ts   = []
 start_time = time.time()
-REF = 4.73
+REF = 4.76
 writing = False
 dt = 0.01
 end = False
@@ -48,10 +48,13 @@ sim_a = 1
 sim_o = 2
 sim_p =np.pi/4
 sim_f = 1
-if simulate:
-    chunkN = 1.0/float(sim_f)/dt
-else:
-    chunkN = 1.0/float(freq)/dt
+gco = 1
+#1/100/0.0001=
+#if simulate:
+#    chunkN = 1.0/float(sim_f)/dt
+#else:
+#    chunkN = 1.0/float(freq)/dt
+chunkN = 100
 t0= time.time()
 sim_vnoise =1e-3
 
@@ -87,13 +90,12 @@ def int2float(meas,REF):
     return ret
 
 def addData(fn):
-    global data, writing, temp, end
+    global data, writing, temp, end, gco
 
     t1 = threading.Timer(N*dt,addData, args=('test.dat',))
     t1.start()
     co=0
     
-
     if len(data)<chunkN+minN:
         return
     while len(data)>chunkN+minN:
@@ -102,14 +104,19 @@ def addData(fn):
             mydata =[]
             while co<chunkN:
                 co+=1
-                meas = int2float(int(data.pop(0)), REF)
-                with open('test2.dat', 'a') as f2:
-                    f2.write('{0:.6}{1:10.6f}\n'.format(ts[0],meas))
+                if not simulate:
+                    meas = int2float(int(data.pop(0)), REF)
+                else:
+                    meas = data.pop(0)
                 mytime.append(ts.pop(0))
                 mydata.append(meas)
                 #meas=data.pop(0)
             mytime=np.array(mytime)
             mydata=np.array(mydata)
+            with open('test{0:03}.dat'.format(gco), 'a') as f2:
+                for a,b in zip(mytime, mydata):
+                    f2.write('{0:.6}{1:10.6f}\n'.format(a,b))            
+            gco = gco+1
             if simulate:
                 a,phi,c2,vals=fit_sine(mytime,mydata,1.0/sim_f)
             else:
@@ -137,7 +144,6 @@ def getData():
         t1 =  time.time()    
         meas = sim_o+sim_a*np.cos(2*np.pi*sim_f*rt+sim_p)+\
             np.random.normal(scale=sim_vnoise)
-        meas = float2int(meas,REF)
         t2 =  time.time()    
         rt = 0.5*(t1+t2)-t0
     else:

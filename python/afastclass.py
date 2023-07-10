@@ -41,7 +41,7 @@ ts   = []
 start_time = time.time()
 REF = 4.76
 writing = False
-dt = 0.0025
+dt = 0.0003
 end = False
 N =10
 minN=5
@@ -116,7 +116,8 @@ def addData(fn):
             while co<chunkN:
                 co+=1
                 if not simulate:
-                    meas = (int2float(int(data.pop(0)), REF)-0.0141172)/gain
+                    #meas = (int2float(int(data.pop(0)), REF)-0.0141172)/gain
+                    meas = int2float(int(data.pop(0)), REF)
                 else:
                     meas = data.pop(0)
                 mytime.append(ts.pop(0))

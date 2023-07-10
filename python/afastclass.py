@@ -162,6 +162,7 @@ def getData():
         rt = 0.5*(t1+t2)-t0
     else:
         t1 = time.time()
+        ADC.ADS1263_WaitDRDY()
         config.digital_write(cs_pin, GPIO.LOW)
         config.spi_writebyte([0x12])
         buf = config.spi_readbytes(5)
@@ -174,7 +175,6 @@ def getData():
 
 N=10
 now = time.time()
-ADC.ADS1263_WaitDRDY()
 t1 = threading.Timer(dt, getData)
 t2 = threading.Timer(N*dt,addData, args=('test.dat',))
 

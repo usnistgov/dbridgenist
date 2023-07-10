@@ -1,25 +1,22 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jul  5 11:18:59 2023
-
-@author: wbalance
-"""
-import threading
 import time
+import ADS1263
+import RPi.GPIO as GPIO
+ADC = ADS1263.ADS1263()
+if ADC.ADS1263_init_ADC1('ADS1263_38400SPS') == -1:
+	exit()
+ADC.ADS1263_SetMode(0)
+ADC.ADS1263_SetChannal(0)
 
-global last
-global dT
-dT=1
+ADC.ADS1263_WaitDRDY()
+times = []
+now = time.time()
+for i in range(1000):
+	meas = ADC.ADS1263_Read_ADC_Data()
+	later = time.time()
+	times.append(later-now)
+	print(meas * 4.6 / 0x7fffffff)
+	now = later
 
-def hello(n,last):
-    now=time.time()
-    n=n+1
-    t = threading.Timer(dT, hello,args=(n,now))
-    t.start()
-    print(n,now-last)
-    last =now
-
-last = time.time()
-n=0
-t = threading.Timer(dT, hello,args=(n,last))
-t.start()  # after 30 seconds, "hello, world" will
+with open('test.dat', 'a') as f:
+	for val in times:
+		f.write("{0}\n".format(val))

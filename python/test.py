@@ -22,7 +22,7 @@ for i in range(1000):
     later = time.time()
     times.append(later-now)
     now = later
-    time.sleep(0.001)
+    time.sleep(0.0002-0.000133)
 
 with open('test.dat', 'a') as f:
 	for val in times:

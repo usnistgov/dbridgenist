@@ -11,11 +11,15 @@ ADC.ADS1263_WaitDRDY()
 times = []
 now = time.time()
 for i in range(1000):
-	meas = ADC.ADS1263_Read_ADC_Data()
+    config.digital_write(self.cs_pin, GPIO.LOW)
+	config.spi_writebyte([ADS1263_CMD['CMD_RDATA1']])
+    buf = config.spi_readbytes(5)
+    config.digital_write(self.cs_pin, GPIO.HIGH)
+    read  = (buf[0]<<24) & 0xff000000 | (buf[1]<<16) & 0xff0000 | (buf[2]<<8) & 0xff00 | read |= (buf[3]) & 0xff
 	later = time.time()
 	times.append(later-now)
-	print(meas * 4.6 / 0x7fffffff)
 	now = later
+    time.sleep(0.001)
 
 with open('test.dat', 'a') as f:
 	for val in times:

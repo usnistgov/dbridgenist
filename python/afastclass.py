@@ -173,7 +173,7 @@ def getData():
 N=10
 now = time.time()
 ADC.ADS1263_WaitDRDY()
-config.digital_write(cs_pin, GPIO.HIGH)
+config.digital_write(cs_pin, GPIO.LOW)
 t1 = threading.Timer(dt, getData)
 t2 = threading.Timer(N*dt,addData, args=('test.dat',))
 

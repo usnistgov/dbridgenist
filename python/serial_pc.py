@@ -14,7 +14,9 @@ ser = serial.Serial('COM5', 19200, timeout=1)
 while True:
     try:
         ret = ser.read(2)
-        ret = int(ret.decode())
+        if ret != '':
+            ret = int(ret.decode())
+            print(ret)
     except KeyboardInterrupt:
         break
     

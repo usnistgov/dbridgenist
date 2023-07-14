@@ -17,7 +17,7 @@ try:
             ret = ser.read(2)
             if ret != b'':
                 ret = int(ret.decode())
-                print(ret)
+                print(ret, end='\r')
         except KeyboardInterrupt:
             break
 except:

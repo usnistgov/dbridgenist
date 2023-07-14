@@ -28,7 +28,7 @@ def get_data():
     
     for i in range(300):
         ret = float2int((300-i)/10)
-        ret = encode(ret, 8)
+        ret = encode(ret, 11)
         ser.write(ret)
         time.sleep(0.1)
     

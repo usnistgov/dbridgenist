@@ -11,15 +11,11 @@ import sys
 
 ser = serial.Serial('COM5', 19200, timeout=1)
 
-ret = ser.read(2)
-arr = []
-
-for i in range(50):
-    ret = ser.read(1)
-    if ret != b'':
-        arr.append(ret)
-    i += 1
+while True:
+    try:
+        ret = ser.read(2)
+        ret = int(ret.decode())
+    except KeyboardInterrupt:
+        break
     
-print(arr)
-
 ser.close()

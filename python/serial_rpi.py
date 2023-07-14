@@ -9,6 +9,13 @@ import serial
 import threading
 import time
 
+def float2int(num):
+    if num>=0:
+        ret = int(num*0x7fffffff)
+    else:
+        ret = int(-num*0x80000000)
+    return ret
+
 def encode(num, nbytes):
     arr = bytearray()
     num = "{0:0{1}}".format(num, nbytes)
@@ -20,8 +27,8 @@ def get_data():
     ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)
     
     for i in range(300):
-        ret = (300-i)/10
-        ret = encode(ret, 2)
+        ret = float2int((300-i)/10)
+        ret = encode(ret, 8)
         ser.write(ret)
         time.sleep(0.1)
     

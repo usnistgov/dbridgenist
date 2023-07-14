@@ -47,7 +47,6 @@ N =10
 minN=5
 gain = 1.013654
 cs_pin = 22
-
 sim_a = 1
 sim_o = 1
 sim_p =np.pi/4

@@ -11,13 +11,16 @@ import sys
 
 ser = serial.Serial('COM5', 19200, timeout=1)
 
-while True:
-    try:
-        ret = ser.read(2)
-        if ret != '':
-            ret = int(ret.decode())
-            print(ret)
-    except KeyboardInterrupt:
-        break
+try:
+    while True:
+        try:
+            ret = ser.read(2)
+            if ret != b'':
+                ret = int(ret.decode())
+                print(ret)
+        except KeyboardInterrupt:
+            break
+except:
+    ser.close()
     
 ser.close()

@@ -10,7 +10,7 @@ import threading
 import time
 
 def get_data():
-    ser = serial.Serial('/dev/ttyAMA0', 30000, timeout=1)
+    ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)
     
     for i in range(30):
         ret = 30-i

@@ -6,8 +6,13 @@ Created on Fri Jul 14 10:17:05 2023
 """
 
 import serial
+import threading
 
-ser = serial.Serial('/dev/ttyS0')
-print(ser.name)
-ser.write(b'hello')
-ser.close()
+def get_data():
+    ser = serial.Serial('/dev/ttyS0')
+    print(ser.name)
+    ser.write(b'hello')
+    ser.close()
+    
+timer = threading.Timer(30.0, get_data)
+timer.start()

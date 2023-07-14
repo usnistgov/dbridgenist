@@ -9,7 +9,7 @@ import serial
 import threading
 
 def get_data():
-    ser = serial.Serial('/dev/ttyS0')
+    ser = serial.Serial('/dev/ttyAMA0')
     print(ser.name)
     ser.write(b'hello')
     ser.close()

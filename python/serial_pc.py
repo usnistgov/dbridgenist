@@ -9,9 +9,7 @@ import serial
 import time
 
 ser = serial.Serial('COM5')
-start = time.time()
 
-while time.time()-start<30:
-    print(ser.read(5).decode())
+ser.read(5)
 
 ser.close()

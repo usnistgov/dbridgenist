@@ -9,9 +9,6 @@ import serial
 import time
 import sys
 
-ser = serial.Serial('COM5', 19200, timeout=1)
-REF = 4.76
-
 def int2float(num):
     if num >> 31 == 1: 
         ret = num / 0x80000000
@@ -36,12 +33,17 @@ try:
         conf = ser.read(7)
         i += 1
         if i >= 30:
-            raise TimeoutError('Could not communicate with pi')
+            raise TimeoutError('Communication failed')
+    print(conf)
+    print("Communication successful")
     while True:
         try:
             length = ser.read(2)
-            ret = ser.read(int(length.decode()))
-            if ret != b'':
+            print(length)
+            ret = None
+            if length != b'':
+                ret = ser.read(int(length.decode()))
+            if ret != b'' and ret != None:
                 ret = ret.decode()
                 ret = ret.split()
                 with open("test.dat", 'a') as f:

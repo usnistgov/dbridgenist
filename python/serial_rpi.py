@@ -46,14 +46,15 @@ def reset():
 
 def addData():
     global ser
-    meas = int(data.pop(0))
-    t = float2int(ts.pop(0))
-    s = '{0} {1}'.format(t,meas)
-    s = encode(s)
-    length = len(s)
-    length = encode(length)
-    ser.write(length)
-    ser.write(s)
+    if data:
+        meas = int(data.pop(0))
+        t = float2int(ts.pop(0))
+        s = '{0} {1}'.format(t,meas)
+        s = encode(s)
+        length = len(s)
+        length = encode(length)
+        ser.write(length)
+        ser.write(s)
 
 def getData():
     global data, ts, done, ADC, t0

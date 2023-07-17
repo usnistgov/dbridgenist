@@ -26,7 +26,8 @@ while not done:
         
 time1 = input("Time: ")
 time1 = time1.split(":")
-time1 = 3600*time1[0]+60*time1[1]+time1[2]
+time1 = 3600*int(time1[0])+60*int(time1[1])+int(time1[2])
+print(time1, type(time1))
 
 if not simulate:
     freq = float(input("Frequency: "))
@@ -100,9 +101,9 @@ def int2float(meas,REF):
         ret =  meas * REF / 0x7fffffff
     return ret
 
-def encode(num, nbytes):
+def encode(num):
     arr = bytearray()
-    num = "{0:0{1}}".format(num, nbytes)
+    num = "{0}".format(num)
     for x in num:
         arr.append(int(ord(x)))
     return arr
@@ -151,22 +152,29 @@ def addData(fn):
         #print('datalen={0} dt mean={1:5.4} ms'.format(len(tmp),1000*np.mean(tmp)))
 
 def addData2():
-    ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)
+#    ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)
     try:
         start = time.time()
-        while data and time.time()-start <= time:
-            if not simulate:
+        while time.time()-start <= time1:
+            if not simulate and data:
                 #meas = (int2float(int(data.pop(0)), REF)-0.0141172)/gain
                 meas = int(data.pop(0))
-            else:
-                meas = float2int(data.pop(0))
-            t = ts.pop(0)
-            s = '{0} {1}'.format(t,meas)
-            s = encode(s, 23)
-            ser.write(s)
-        ser.close()
-    except:
-        ser.close()
+                t = float2int(ts.pop(0), REF)
+                s = '{0} {1}'.format(t,meas)
+                print(s)
+                s = encode(s)
+#                ser.write(s)
+            elif simulate and data:
+                meas = float2int(data.pop(0), REF)
+                t = float2int(ts.pop(0), REF)
+                s = '{0} {1}'.format(t,meas)
+                print(s)
+                s = encode(s)
+#                ser.write(s)
+#        ser.close()
+    except Exception as e:
+        print(e)
+#        ser.close()
         
 
 def float2int(meas,REF):

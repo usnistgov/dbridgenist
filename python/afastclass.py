@@ -152,7 +152,7 @@ def addData(fn):
         #print('datalen={0} dt mean={1:5.4} ms'.format(len(tmp),1000*np.mean(tmp)))
 
 def addData2():
-#    ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)
+    ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)
     try:
         start = time.time()
         while time.time()-start <= time1:
@@ -163,18 +163,18 @@ def addData2():
                 s = '{0} {1}'.format(t,meas)
                 print(s)
                 s = encode(s)
-#                ser.write(s)
+                ser.write(s)
             elif simulate and data:
                 meas = float2int(data.pop(0), REF)
                 t = float2int(ts.pop(0), REF)
                 s = '{0} {1}'.format(t,meas)
                 print(s)
                 s = encode(s)
-#                ser.write(s)
-#        ser.close()
+                ser.write(s)
+        ser.close()
     except Exception as e:
         print(e)
-#        ser.close()
+        ser.close()
         
 
 def float2int(meas,REF):

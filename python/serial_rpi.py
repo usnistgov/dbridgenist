@@ -32,7 +32,7 @@ def float2int(num):
 
 def encode(num):
     arr = bytearray()
-    num = "{0}".format(num)
+    num = str(num)
     for x in num:
         arr.append(int(ord(x)))
     return arr
@@ -68,19 +68,21 @@ def getData():
     rt = 0.5*(t1+t2)-t0
     data.append(meas)
     ts.append(rt)
-   
-while True:
-    conf = ser.read(7)
-    while conf != b'pcready':
+
+try:
+    while True:
         conf = ser.read(7)
-    ser.write(b'piready')
-    reset()
-    t1 = threading.Timer(dt,getData)
-    t2 = threading.Timer(N*dt,addData)
-    t1.start()
-    t2.start()
-    conf = ser.read(4)
-    while conf != b'done':
+        while conf != b'pcready':
+            conf = ser.read(7)
+        ser.write(b'piready')
+        reset()
+        t1 = threading.Timer(dt,getData)
+        t2 = threading.Timer(N*dt,addData)
+        t1.start()
+        t2.start()
         conf = ser.read(4)
-    done = True
-    
+        while conf != b'done':
+            conf = ser.read(4)
+        done = True
+except Exception as e:
+    ser.write(encode(e))

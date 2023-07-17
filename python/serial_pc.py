@@ -34,7 +34,6 @@ try:
         i += 1
         if i >= 30:
             raise TimeoutError('Communication failed')
-    print(conf)
     print("Communication successful")
     while True:
         try:

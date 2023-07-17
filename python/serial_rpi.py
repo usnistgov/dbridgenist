@@ -11,10 +11,17 @@ import time
 import ADS1263
 
 dt = 0.001
+N = 10
+ADC = ADS1263.ADS1263()
+if (ADC.ADS1263_init_ADC1('ADS1263_38400SPS') == -1):
+    exit()
+ADC.ADS1263_SetMode(0)
+ADC.ADS1263_SetChannal(0)
 data = []
 ts = []
 done = False
 t0 = time.time()
+ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)
 
 def float2int(num):
     if num>=0:
@@ -38,6 +45,7 @@ def reset():
     t0 = time.time()
 
 def addData():
+    global ser
     meas = int(data.pop(0))
     t = float2int(ts.pop(0))
     s = '{0} {1}'.format(t,meas)
@@ -60,8 +68,7 @@ def getData():
     rt = 0.5*(t1+t2)-t0
     data.append(meas)
     ts.append(rt)
-
-ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)    
+   
 while True:
     conf = ser.read(7)
     while conf != b'pcready':
@@ -69,6 +76,9 @@ while True:
     ser.write(b'piready')
     reset()
     t1 = threading.Timer(dt,getData)
+    t2 = threading.Timer(N*dt,addData)
+    t1.start()
+    t2.start()
     conf = ser.read(4)
     while conf != b'done':
         conf = ser.read(4)

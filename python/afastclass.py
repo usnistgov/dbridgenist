@@ -192,6 +192,13 @@ def float2int(meas,REF):
         ret = int(-meas/REF*0x80000000)
     return ret
 
+def float2int2(meas,REF):
+    if meas>=0:
+        ret = int(meas*0x7fffffff)
+    else:
+        ret = int(-meas*0x80000000)
+    return ret
+
 def getData():
     global data, writing, temp, end, gco, done
     if not done:

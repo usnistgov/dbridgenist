@@ -29,13 +29,14 @@ def int2float2(num, REF):
 try:
     while True:
         try:
-            ret = ser.read(23)
+            length = ser.read(2)
+            ret = ser.read(length)
             print(ret)
             if ret != b'':
-                ret = int(ret.decode())
+                ret = ret.decode()
                 ret = ret.split()
-                with open("U:\JordanLove\DATA\202307\17\test.dat", 'a') as f:
-                    f.write('{0:.6}{1:10.6f}'.format(int2float(ret[0]),  int2float2(ret[1], REF)))
+                with open("test.dat", 'a') as f:
+                    f.write('{0:.6}{1:10.6f}\n'.format(int2float(int(ret[0])),  int2float2(int(ret[1]), REF)))
         except KeyboardInterrupt:
             break
 

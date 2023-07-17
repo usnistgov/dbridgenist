@@ -170,6 +170,9 @@ def addData2():
                 t = float2int(ts.pop(0), REF)
                 s = '{0} {1}'.format(t,meas)
                 s = encode(s)
+                length = len(s)
+                length = encode(length)
+                ser.write(length)
                 ser.write(s)
         ser.close()
         done = True

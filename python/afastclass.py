@@ -25,7 +25,7 @@ while not done:
         print("Invalid")
         
 time1 = input("Time: ")
-time1 = time.split(":")
+time1 = time1.split(":")
 time1 = 3600*time[0]+60*time[1]+time[2]
 
 if not simulate:

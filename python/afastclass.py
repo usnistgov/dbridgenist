@@ -26,7 +26,7 @@ while not done:
         
 time1 = input("Time: ")
 time1 = time1.split(":")
-time1 = 3600*time[0]+60*time[1]+time[2]
+time1 = 3600*time1[0]+60*time1[1]+time1[2]
 
 if not simulate:
     freq = float(input("Frequency: "))

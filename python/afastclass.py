@@ -174,6 +174,7 @@ def addData2():
                 s = encode(s)
                 ser.write(s)
         ser.close()
+        done = True
     except Exception as e:
         print(e)
         ser.close()

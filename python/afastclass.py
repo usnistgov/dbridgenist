@@ -9,8 +9,8 @@ Created on Wed Jun 28 13:40:03 2023
 import time
 import numpy as np
 import threading
-import matplotlib.pyplot as plt
 import os
+import serial
 
 done = False
 while not done:

@@ -41,6 +41,7 @@ if not simulate:
     ADC.ADS1263_SetMode(0)
     ADC.ADS1263_SetChannal(0)
  
+done = False
 data = []
 ts   = []
 start_time = time.time()
@@ -152,6 +153,7 @@ def addData(fn):
         #print('datalen={0} dt mean={1:5.4} ms'.format(len(tmp),1000*np.mean(tmp)))
 
 def addData2():
+    global data, writing, temp, end, gco, done
     ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)
     try:
         start = time.time()
@@ -175,6 +177,7 @@ def addData2():
     except Exception as e:
         print(e)
         ser.close()
+        done = True
         
 
 def float2int(meas,REF):
@@ -185,8 +188,10 @@ def float2int(meas,REF):
     return ret
 
 def getData():
-    t1 = threading.Timer(dt,getData)
-    t1.start()
+    global data, writing, temp, end, gco, done
+    if not done:
+        t1 = threading.Timer(dt,getData)
+        t1.start()
     now = time.time()
     rt = now - t0
     if simulate:

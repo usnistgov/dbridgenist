@@ -96,7 +96,7 @@ def addData(start):
     global data, writing, temp, end, gco, done
     
     if time.time()-start <= time1 and not done:
-        t2 = threading.Timer(N*dt, addData2, args=(now,))
+        t2 = threading.Timer(N*dt, addData, args=(now,))
         t2.start()
     else:
         done = True

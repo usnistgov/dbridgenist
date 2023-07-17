@@ -203,7 +203,7 @@ ADC.ADS1263_WaitDRDY()
 now = time.time()
 t1 = threading.Timer(dt, getData)
 #t2 = threading.Timer(N*dt,addData, args=('test.dat',))
-t2 = threading.Thread(addData2)
+t2 = threading.Thread(target=addData2)
 
 
 t1.start()

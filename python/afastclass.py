@@ -161,7 +161,7 @@ def addData2():
             if not simulate and data:
                 #meas = (int2float(int(data.pop(0)), REF)-0.0141172)/gain
                 meas = int(data.pop(0))
-                t = float2int(ts.pop(0), REF)
+                t = float2int2(ts.pop(0), REF)
                 s = '{0} {1}'.format(t,meas)
                 s = encode(s)
                 length = len(s)
@@ -170,7 +170,7 @@ def addData2():
                 ser.write(s)
             elif simulate and data:
                 meas = float2int(data.pop(0), REF)
-                t = float2int(ts.pop(0), REF)
+                t = float2int2(ts.pop(0), REF)
                 s = '{0} {1}'.format(t,meas)
                 s = encode(s)
                 length = len(s)

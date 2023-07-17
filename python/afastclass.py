@@ -23,6 +23,10 @@ while not done:
         done = True
     else:
         print("Invalid")
+        
+time1 = input("Time: ")
+time1 = time.split(":")
+time1 = 3600*time[0]+60*time[1]+time[2]
 
 if not simulate:
     freq = float(input("Frequency: "))
@@ -96,6 +100,13 @@ def int2float(meas,REF):
         ret =  meas * REF / 0x7fffffff
     return ret
 
+def encode(num, nbytes):
+    arr = bytearray()
+    num = "{0:0{1}}".format(num, nbytes)
+    for x in num:
+        arr.append(int(ord(x)))
+    return arr
+
 def addData(fn):
     global data, writing, temp, end, gco
 
@@ -139,6 +150,25 @@ def addData(fn):
         #print(co)
         #print('datalen={0} dt mean={1:5.4} ms'.format(len(tmp),1000*np.mean(tmp)))
 
+def addData2():
+    ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)
+    try:
+        start = time.time()
+        while data and time.time()-start <= time:
+            if not simulate:
+                #meas = (int2float(int(data.pop(0)), REF)-0.0141172)/gain
+                meas = int(data.pop(0))
+            else:
+                meas = float2int(data.pop(0))
+            t = ts.pop(0)
+            s = '{0} {1}'.format(t,meas)
+            s = encode(s, 23)
+            ser.write(s)
+        ser.close()
+    except:
+        ser.close()
+        
+
 def float2int(meas,REF):
     if meas>=0:
         ret = int(meas/REF*0x7fffffff)
@@ -172,8 +202,8 @@ N=10
 ADC.ADS1263_WaitDRDY()
 now = time.time()
 t1 = threading.Timer(dt, getData)
-t2 = threading.Timer(N*dt,addData, args=('test.dat',))
-
+#t2 = threading.Timer(N*dt,addData, args=('test.dat',))
+t2 = threading.Thread(addData2)
 
 
 t1.start()

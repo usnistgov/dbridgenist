@@ -80,6 +80,12 @@ try:
             conf = ser.read(7)
         ser.write(b'piready')
         reset()
+        length = ser.read(2)
+        while length == b'':
+            length = ser.read(2)
+        dt = ser.read(int(length.decode()))
+        while dt == b'':
+            dt = ser.read(int(length.decode()))
         t1 = threading.Timer(dt,getData)
         t2 = threading.Timer(N*dt,addData)
         t1.start()

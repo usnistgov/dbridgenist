@@ -46,6 +46,9 @@ def reset():
 
 def addData():
     global ser
+    if not done:
+        t2 = threading.Timer(N*dt,addData)
+        t2.start()    
     if data:
         meas = int(data.pop(0))
         t = float2int(ts.pop(0))
@@ -86,4 +89,4 @@ try:
             conf = ser.read(4)
         done = True
 except Exception as e:
-    ser.write(encode(e))
+    ser.write(b'Error')

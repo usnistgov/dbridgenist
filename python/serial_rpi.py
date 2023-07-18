@@ -80,29 +80,30 @@ def getData():
     data.append(meas)
     ts.append(rt)
 
-try:
-    while True:
-        conf = ser.read(7)
-        while conf != b'pcready':
+while True:
+    try:
+        while True:
             conf = ser.read(7)
-        ser.write(b'piready')
-        reset()
-        length = ser.read(2)
-        while length == b'':
+            while conf != b'pcready':
+                conf = ser.read(7)
+            ser.write(b'piready')
+            reset()
             length = ser.read(2)
-        dt = ser.read(int(length.decode()))
-        while dt == b'':
+            while length == b'':
+                length = ser.read(2)
             dt = ser.read(int(length.decode()))
-        dt = int2float(dt.decode())
-        t1 = threading.Timer(dt,getData)
-        t2 = threading.Timer(N*dt,addData)
-        t1.start()
-        t2.start()
-        conf = ser.read(4)
-        while conf != b'done':
+            while dt == b'':
+                dt = ser.read(int(length.decode()))
+            dt = int2float(dt.decode())
+            t1 = threading.Timer(dt,getData)
+            t2 = threading.Timer(N*dt,addData)
+            t1.start()
+            t2.start()
             conf = ser.read(4)
-        done = True
-except Exception as e:
-    e = "From pi: " + e + " ---- closing connection..."
-    ser.write(encode(len(encode(e))))
-    ser.write(encode(e))
+            while conf != b'done':
+                conf = ser.read(4)
+            done = True
+    except Exception as e:
+        e = "From pi: " + e
+        ser.write(encode(len(encode(e))))
+        ser.write(encode(e))

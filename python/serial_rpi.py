@@ -45,11 +45,10 @@ def encode(num):
     return arr
 
 def reset():
-    global data, ts, done, t0, dt
+    global data, ts, done, dt
     data = []
     ts = []
     done = False
-    t0 = time.time()
     dt = 0.002
 
 def addData():
@@ -96,6 +95,7 @@ while True:
             while dt == b'':
                 dt = ser.read(int(length.decode()))
             dt = int2float(int(dt.decode()))
+            t0 = time.time()
             t1 = threading.Timer(dt,getData)
             t2 = threading.Timer(N*dt,addData)
             t1.start()

@@ -23,6 +23,13 @@ def int2float2(num, REF):
         ret =  num * REF / 0x7fffffff
     return round(ret, 6)
 
+def encode(num):
+    arr = bytearray()
+    num = str(num)
+    for x in num:
+        arr.append(int(ord(x)))
+    return arr
+
 ser = serial.Serial('COM5', 19200, timeout=1)
 try:
     REF = 4.76
@@ -35,10 +42,12 @@ try:
         if i >= 30:
             raise TimeoutError('Communication failed')
     print("Communication successful")
+    dt = float(input("dt: "))
+    ser.write(encode(len(dt)))
+    ser.write(encode(dt))
     while True:
         try:
             length = ser.read(2)
-            print(length)
             ret = None
             if length != b'':
                 ret = ser.read(int(length.decode()))

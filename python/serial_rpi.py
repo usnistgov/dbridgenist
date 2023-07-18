@@ -23,6 +23,13 @@ done = False
 t0 = time.time()
 ser = serial.Serial('/dev/ttyAMA0', 19200, timeout=1)
 
+def int2float(num):
+    if num >> 31 == 1: 
+        ret = num / 0x80000000
+    elif num >> 31 != 1:
+        ret =  num / 0x7fffffff
+    return round(ret, 6)
+
 def float2int(num):
     if num>=0:
         ret = int(num*0x7fffffff)
@@ -86,6 +93,7 @@ try:
         dt = ser.read(int(length.decode()))
         while dt == b'':
             dt = ser.read(int(length.decode()))
+        dt = int2float(dt.decode())
         t1 = threading.Timer(dt,getData)
         t2 = threading.Timer(N*dt,addData)
         t1.start()

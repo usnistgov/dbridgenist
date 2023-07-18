@@ -45,11 +45,12 @@ def encode(num):
     return arr
 
 def reset():
-    global data, ts, done, t0
+    global data, ts, done, t0, dt
     data = []
     ts = []
     done = False
     t0 = time.time()
+    dt = 0.002
 
 def addData():
     global ser

@@ -103,4 +103,5 @@ try:
             conf = ser.read(4)
         done = True
 except Exception as e:
-    ser.write(b'Error')
+    ser.write(encode(len(encode(e))))
+    ser.write(encode(e))

@@ -23,6 +23,13 @@ def int2float2(num, REF):
         ret =  num * REF / 0x7fffffff
     return round(ret, 6)
 
+def float2int(num):
+    if num>=0:
+        ret = int(num*0x7fffffff)
+    else:
+        ret = int(-num*0x80000000)
+    return ret
+
 def encode(num):
     arr = bytearray()
     num = str(num)
@@ -43,8 +50,8 @@ try:
             raise TimeoutError('Communication failed')
     print("Communication successful")
     dt = float(input("dt: "))
-    ser.write(encode(len(dt)))
-    ser.write(encode(dt))
+    ser.write(encode(len(encode(float2int(dt)))))
+    ser.write(encode(float2int(dt)))
     while True:
         try:
             length = ser.read(2)
@@ -59,12 +66,11 @@ try:
                     f.write(s)
                     print(s)
         except KeyboardInterrupt:
+            ser.write(b'done')
+            ser.close()
             break
 
 except Exception as e:
     print(e)
     ser.write(b'done')
     ser.close()
-
-ser.write(b'done')
-ser.close()

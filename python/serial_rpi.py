@@ -64,7 +64,6 @@ def addData():
         length = len(s)
         length = encode(length)
         ser.write(length)
-        time.sleep(dt)
         ser.write(s)
 
 def getData():
@@ -98,7 +97,7 @@ while True:
             dt = int2float(int(dt.decode()))
             t0 = time.time()
             t1 = threading.Timer(dt,getData)
-            t2 = threading.Timer(dt,addData)
+            t2 = threading.Timer(0.2,addData)
             t1.start()
             t2.start()
             conf = ser.read(4)

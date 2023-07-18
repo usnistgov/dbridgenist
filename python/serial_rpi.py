@@ -94,7 +94,7 @@ while True:
             dt = ser.read(int(length.decode()))
             while dt == b'':
                 dt = ser.read(int(length.decode()))
-            dt = int2float(dt.decode())
+            dt = int2float(int(dt.decode()))
             t1 = threading.Timer(dt,getData)
             t2 = threading.Timer(N*dt,addData)
             t1.start()

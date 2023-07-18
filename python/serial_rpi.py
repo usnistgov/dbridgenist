@@ -10,7 +10,7 @@ import threading
 import time
 import ADS1263
 
-dt = 0.001
+dt = 0.0005
 N = 10
 ADC = ADS1263.ADS1263()
 if (ADC.ADS1263_init_ADC1('ADS1263_38400SPS') == -1):

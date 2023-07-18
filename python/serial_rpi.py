@@ -103,5 +103,6 @@ try:
             conf = ser.read(4)
         done = True
 except Exception as e:
+    e = "From pi: " + e + " ---- closing connection..."
     ser.write(encode(len(encode(e))))
     ser.write(encode(e))

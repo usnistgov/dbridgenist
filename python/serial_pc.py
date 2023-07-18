@@ -58,13 +58,15 @@ try:
             ret = None
             if length != b'':
                 ret = ser.read(int(length.decode()))
-            if ret != b'' and ret != None:
+            if ret != b'' and ret != None and len(ret.decode().split() == 2):
                 ret = ret.decode()
                 ret = ret.split()
                 with open("test.dat", 'a') as f:
                     s = '{0:.6} {1:10.6f}\n'.format(int2float(int(ret[0])),  int2float2(int(ret[1]), REF))
                     f.write(s)
                     print(s)
+            else:
+                print(ret.decode())
         except KeyboardInterrupt:
             ser.write(b'done')
             ser.close()

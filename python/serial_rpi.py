@@ -88,13 +88,13 @@ while True:
                 conf = ser.read(7)
             ser.write(b'piready')
             reset()
-            length = ser.read(2)
-            while length == b'':
-                length = ser.read(2)
-            dt = ser.read(int(length.decode()))
-            while dt == b'':
-                dt = ser.read(int(length.decode()))
-            dt = int2float(int(dt.decode()))
+            #length = ser.read(2)
+            #while length == b'':
+            #    length = ser.read(2)
+            #dt = ser.read(int(length.decode()))
+            #while dt == b'':
+            #    dt = ser.read(int(length.decode()))
+            #dt = int2float(int(dt.decode()))
             t0 = time.time()
             t1 = threading.Timer(dt,getData)
             t2 = threading.Timer(0.2,addData)

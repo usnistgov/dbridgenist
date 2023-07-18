@@ -8,6 +8,7 @@ Created on Fri Jul 14 10:38:49 2023
 import serial
 import time
 import sys
+import os
 
 def int2float(num):
     if num >> 31 == 1: 
@@ -55,18 +56,22 @@ try:
     while True:
         try:
             length = ser.read(2)
+            print(length)
             ret = None
             if length != b'':
                 ret = ser.read(int(length.decode()))
-            if ret != b'' and ret != None and len(ret.decode().split() == 2):
+            if ret != b'' and ret != None and len(ret.decode().split()) == 2:
                 ret = ret.decode()
                 ret = ret.split()
-                with open("test.dat", 'a') as f:
+                with open(os.path.join(r'U:\JordanLove\DATA\202307\18', "test.dat"), 'a') as f:
                     s = '{0:.6} {1:10.6f}\n'.format(int2float(int(ret[0])),  int2float2(int(ret[1]), REF))
                     f.write(s)
                     print(s)
-            else:
-                print(ret.decode())
+            elif ret != b'' and ret != None and len(ret.decode().split()) != 2:
+                err = ret
+                while err == b'':
+                    err = ser.read(int(length.decode()))
+                print(err.decode())
         except KeyboardInterrupt:
             ser.write(b'done')
             ser.close()

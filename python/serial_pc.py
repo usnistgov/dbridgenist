@@ -40,7 +40,8 @@ def encode(num):
 
 ser = serial.Serial('COM5', 19200, timeout=1)
 try:
-    REF = 4.76
+    REF = 4.79
+    gain = 1
     ser.write(b'pcready')
     conf = ser.read(7)
     i = 0
@@ -50,9 +51,9 @@ try:
         if i >= 30:
             raise TimeoutError('Communication failed')
     print("Communication successful")
-    dt = float(input("dt: "))
-    ser.write(encode(len(encode(float2int(dt)))))
-    ser.write(encode(float2int(dt)))
+    #dt = float(input("dt: "))
+    #ser.write(encode(len(encode(float2int(dt)))))
+    #ser.write(encode(float2int(dt)))
     while True:
         try:
             length = ser.read(2)
@@ -63,8 +64,8 @@ try:
             if ret != b'' and ret != None and len(ret.decode().split()) == 2:
                 ret = ret.decode()
                 ret = ret.split()
-                with open(os.path.join(r'U:\JordanLove\DATA\202307\18', "test.dat"), 'a') as f:
-                    s = '{0:.6} {1:10.6f}\n'.format(int2float(int(ret[0])),  int2float2(int(ret[1]), REF))
+                with open(os.path.join(r'U:\JordanLove\DATA\202307\19', "test.dat"), 'a') as f:
+                    s = '{0:10.6f} {1:10.6f}\n'.format(int2float(int(ret[0])),  int2float2(int(ret[1]), REF)/gain)
                     f.write(s)
                     print(s)
             elif ret != b'' and ret != None and len(ret.decode().split()) != 2:

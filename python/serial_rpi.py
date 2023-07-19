@@ -9,6 +9,7 @@ import serial
 import threading
 import time
 import ADS1263
+import struct
 
 dt = 0.0012
 N = 10
@@ -37,13 +38,6 @@ def float2int(num):
         ret = int(-num*0x80000000)
     return ret
 
-def encode(num):
-    arr = bytearray()
-    num = str(num)
-    for x in num:
-        arr.append(int(ord(x)))
-    return arr
-
 def reset():
     global data, ts, done, dt
     data = []
@@ -59,12 +53,8 @@ def addData():
     if data:
         meas = int(data.pop(0))
         t = float2int(ts.pop(0))
-        s = '{0} {1}'.format(t,meas)
-        s = encode(s)
-        length = len(s)
-        length = encode(length)
-        ser.write(length)
-        ser.write(s)
+        ret = struct.pack('>l', t) + struct.pack('>l', meas)
+        ser.write(ret)
 
 def getData():
     global data, ts, done, ADC, t0
@@ -88,13 +78,6 @@ while True:
                 conf = ser.read(7)
             ser.write(b'piready')
             reset()
-            #length = ser.read(2)
-            #while length == b'':
-            #    length = ser.read(2)
-            #dt = ser.read(int(length.decode()))
-            #while dt == b'':
-            #    dt = ser.read(int(length.decode()))
-            #dt = int2float(int(dt.decode()))
             t0 = time.time()
             t1 = threading.Timer(dt,getData)
             t2 = threading.Timer(0.2,addData)
@@ -105,6 +88,5 @@ while True:
                 conf = ser.read(4)
             done = True
     except Exception as e:
-        e = "From pi: " + e
-        ser.write(encode(len(encode(e))))
-        ser.write(encode(e))
+        #print(e)
+        break

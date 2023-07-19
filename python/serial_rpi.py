@@ -48,7 +48,7 @@ def reset():
 def addData():
     global ser
     if not done:
-        t2 = threading.Timer(N*dt,addData)
+        t2 = threading.Timer(0.2,addData)
         t2.start()
     if data:
         meas = int(data.pop(0))

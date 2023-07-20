@@ -76,5 +76,5 @@ while True:
                 conf = ser.read(4)
             done = True
     except Exception as e:
-        #print(e)
+        print(e)
         break

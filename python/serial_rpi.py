@@ -43,7 +43,7 @@ def reset():
     data = []
     ts = []
     done = False
-    dt = 0.1
+    dt = 0.0012
 
 def addData():
     global ser

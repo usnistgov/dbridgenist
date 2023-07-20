@@ -31,11 +31,11 @@ def int2float(num):
         ret =  num / 0x7fffffff
     return round(ret, 6)
 
-def float2int(num):
+def float2int(num, REF):
     if num>=0:
-        ret = int(num*0x7fffffff)
+        ret = int(num / REF * 0x7fffffff)
     else:
-        ret = int(-num*0x80000000)
+        ret = int(-num / REF * 0x80000000)
     return ret
 
 def reset():
@@ -52,7 +52,7 @@ def addData():
         t2.start()
     if data:
         meas = int(data.pop(0))
-        t = float2int(ts.pop(0))
+        t = float2int(ts.pop(0), 3600)
         ret = struct.pack('>l', t) + struct.pack('>l', meas)
         ser.write(ret)
 

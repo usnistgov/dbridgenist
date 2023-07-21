@@ -56,7 +56,8 @@ def getData():
     meas = int(ADC.ADS1263_Read_ADC_Data())
     t2 = time.time()
     rt = 0.5*(t1+t2)-t0
-    t = float2int(rt, 3600)
+    t0 = rt
+    t = float2int(rt, 5)
     ret = struct.pack('>l', t) + struct.pack('>l', meas)
     ser.write(ret)
 

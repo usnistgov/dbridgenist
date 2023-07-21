@@ -9,6 +9,8 @@ import serial
 import time
 import sys
 import os
+import struct
+import linecache
 
 def int2float(num):
     if num >> 31 == 1: 
@@ -38,10 +40,19 @@ def encode(num):
         arr.append(int(ord(x)))
     return arr
 
+def PrintException():
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
+
 ser = serial.Serial('COM5', 19200, timeout=1)
 try:
     REF = 4.79
-    gain = 1
+    gain = 1.0205
     ser.write(b'pcready')
     conf = ser.read(7)
     i = 0
@@ -51,34 +62,29 @@ try:
         if i >= 30:
             raise TimeoutError('Communication failed')
     print("Communication successful")
-    #dt = float(input("dt: "))
-    #ser.write(encode(len(encode(float2int(dt)))))
-    #ser.write(encode(float2int(dt)))
     while True:
         try:
-            length = ser.read(2)
-            print(length)
-            ret = None
-            if length != b'':
-                ret = ser.read(int(length.decode()))
-            if ret != b'' and ret != None and len(ret.decode().split()) == 2:
-                ret = ret.decode()
-                ret = ret.split()
-                with open(os.path.join(r'U:\JordanLove\DATA\202307\19', "test.dat"), 'a') as f:
-                    s = '{0:10.6f} {1:10.6f}\n'.format(int2float(int(ret[0])),  int2float2(int(ret[1]), REF)/gain)
+            length = ser.in_waiting
+            if length%4 != 0 or length == 0:
+                continue
+            ret = ser.read(ser.in_waiting)
+            ret2 = struct.iter_unpack('>l',ret)
+            dts = []
+            vals = []
+            for i in range(int(length/8)):
+                dts.append(next(ret2)[0])
+                vals.append(next(ret2)[0])
+            with open(os.path.join(r'U:\JordanLove\DATA\202307\21', "test.dat"), 'a') as f:
+                for a,b in zip(dts, vals):
+                    s = '{0:10.6f} {1:10.6f}\n'.format(int2float2(int(a), 5),  int2float2(int(b), REF)/gain)
                     f.write(s)
                     print(s)
-            elif ret != b'' and ret != None and len(ret.decode().split()) != 2:
-                err = ret
-                while err == b'':
-                    err = ser.read(int(length.decode()))
-                print(err.decode())
         except KeyboardInterrupt:
             ser.write(b'done')
             ser.close()
             break
 
-except Exception as e:
-    print(e)
+except:
+    PrintException()
     ser.write(b'done')
     ser.close()

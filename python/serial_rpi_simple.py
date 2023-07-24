@@ -13,6 +13,7 @@ import struct
 
 dt = 0.0012
 N = 10
+n = 0
 ADC = ADS1263.ADS1263()
 if (ADC.ADS1263_init_ADC1('ADS1263_38400SPS') == -1):
     exit()
@@ -46,7 +47,7 @@ def reset():
     dt = 0.006
 
 def getData():
-    global data, ts, done, ADC, t0, ser
+    global data, ts, done, ADC, t0, ser, n
     if not done:
         t1 = threading.Timer(dt,getData)
         t1.start()
@@ -58,7 +59,8 @@ def getData():
     rt = 0.5*(t1+t2)-t0
     t0 += rt
     t = float2int(rt, 5)
-    ret = struct.pack('>l', t) + struct.pack('>l', meas)
+    ret = struct.pack('>l', t) + struct.pack('>l', meas) + struct.pack('>l', n)
+    n += 1
     ser.write(ret)
 
 while True:

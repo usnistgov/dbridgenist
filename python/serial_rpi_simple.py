@@ -40,7 +40,7 @@ def float2int(num, REF):
     return ret
 
 def reset():
-    global data, ts, done, dt
+    global data, ts, done, dt, n
     data = []
     ts = []
     done = False

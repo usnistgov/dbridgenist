@@ -45,6 +45,7 @@ def reset():
     ts = []
     done = False
     dt = 0.006
+    n = 0
 
 def getData():
     global data, ts, done, ADC, t0, ser, n

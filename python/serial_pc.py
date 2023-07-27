@@ -65,18 +65,20 @@ try:
     while True:
         try:
             length = ser.in_waiting
+            ret = ser.read(length)
             if length%4 != 0 or length == 0:
                 continue
-            ret = ser.read(ser.in_waiting)
             ret2 = struct.iter_unpack('>l',ret)
             dts = []
             vals = []
-            for i in range(int(length/8)):
+            ns = []
+            for i in range(int(length/12)):
                 dts.append(next(ret2)[0])
                 vals.append(next(ret2)[0])
-            with open(os.path.join(r'U:\JordanLove\DATA\202307\21', "test.dat"), 'a') as f:
-                for a,b in zip(dts, vals):
-                    s = '{0:10.6f} {1:10.6f}\n'.format(int2float2(int(a), 5),  int2float2(int(b), REF)/gain)
+                ns.append(next(ret2)[0])
+            with open(os.path.join(r'U:\JordanLove\DATA\202307\24', "test.dat"), 'a') as f:
+                for a,b,c in zip(dts, vals, ns):
+                    s = '{0:10.6f} {1:10.6f} {2}\n'.format(int2float2(int(a), 5),  int2float2(int(b), REF)/gain, c)
                     f.write(s)
                     print(s)
         except KeyboardInterrupt:

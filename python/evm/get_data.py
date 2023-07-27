@@ -14,6 +14,17 @@ def get_id():
 	return read_register(0)[0]>>5
 
 def setup():
+    DRDY = 26
+    
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(DRDY, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+    spi.open(0, 1)
+    spi.max_speed_hz = 2000000
+
+    spi.writebytes([0x06])
+    spi.writebytes([0x0a])
+    
     id = get_id()
     if id == 0x01:
     	print("ID Read success")
@@ -55,12 +66,8 @@ def setup():
     else:
     	print("Filter set failed (MODE1)")
     	sys.exit()
-
-GPIO.setmode(GPIO.BCM)
+        
+    spi.writebytes([0x08])
 
 spi = spidev.SpiDev()
-spi.open(0, 1)
-spi.max_speed_hz = 2000000
-
-result = spi.xfer([0x06])
 setup()

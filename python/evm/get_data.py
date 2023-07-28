@@ -119,4 +119,5 @@ try:
 
 except KeyboardInterrupt:
     print("Data collection stopped")
+    spi.close()
     sys.exit()

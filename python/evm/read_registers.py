@@ -13,3 +13,5 @@ for reg in range(27):
 	spi.writebytes([0x20 | reg, 0x00])
 	result2 = spi.readbytes(1)
 	print(format(reg, '#04x'), ':', format(result2[0], '#04x'),':', format(result2[0], '#010b'))
+
+spi.close()

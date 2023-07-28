@@ -70,7 +70,7 @@ def setup():
     	print("ID Read success")
     else:
     	print("ID Read failed")
-    	sys.exit()
+    	exit_clean()
     spi.writebytes([0x0A])
     
     GAIN = 0
@@ -81,7 +81,7 @@ def setup():
     	print("DRATE set")
     else:
     	print("DRATE set failed (MODE2)")
-    	sys.exit()
+    	exit_clean()
     
     refmux = 0x24
     write_register(0x0f, refmux)
@@ -89,7 +89,7 @@ def setup():
     	print("REF voltage set")
     else:
     	print("REF voltage set failed (REFMUX)")
-    	sys.exit()
+    	exit_clean()
     
     delay = 0x00
     write_register(0x03, delay)
@@ -97,7 +97,7 @@ def setup():
     	print("Delay set")
     else:
     	print("Delay set failed (MODE0)")
-    	sys.exit()
+    	exit_clean()
     
     mode1 = 0x84
     write_register(0x04, mode1)
@@ -105,7 +105,7 @@ def setup():
     	print("Filter set")
     else:
     	print("Filter set failed (MODE1)")
-    	sys.exit()
+    	exit_clean()
         
     inpmux = 0x0a
     write_register(0x06, inpmux)
@@ -113,9 +113,13 @@ def setup():
         print("Channel set")
     else:
         print("Channel set failed (INPMUX)")
-        sys.exit()
+        exit_clean()
 
     spi.writebytes([0x08])
+
+def exit_clean():
+    spi.close()
+    GPIO.cleanup()
 
 DRDY = 26
 CS = 16
@@ -135,5 +139,4 @@ try:
 
 except KeyboardInterrupt:
     print("Data collection stopped")
-    spi.close()
-    sys.exit()
+    exit_clean()

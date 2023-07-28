@@ -12,4 +12,4 @@ result = spi.xfer([0x06])
 for reg in range(27):
 	spi.writebytes([0x20 | reg, 0x00])
 	result2 = spi.readbytes(1)
-	print(hex(result2[0]),':', bin(result2[0]>>5))
+	print(format(result2[0], '#04x'),':', bin(result2[0]>>5))

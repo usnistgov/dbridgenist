@@ -2,13 +2,25 @@ import spidev
 import RPi.GPIO as GPIO
 import sys
 
+def set_cs(state):
+    if state == 0:
+        GPIO.output(CS, GPIO.LOW)
+    elif state == 1:
+        GPIO.output(CS, GPIO.HIGH)
+    else:
+        return
+
 def read_register(reg):
+    set_cs(0)
     spi.writebytes([0x20 | reg, 0x00])
     result = spi.readbytes(1)
+    set_cs(1)
     return result
 
 def write_register(reg, data):
+    set_cs(0)
     spi.writebytes([0x40 | reg, 0x00, data])
+    set_cs(1)
 
 def get_id():
     return read_register(0)[0]>>5
@@ -20,10 +32,11 @@ def wait_drdy():
         if GPIO.input(DRDY) == 0:
             break
         if i >= 400000:
-            print('timeout')
+            print('timeout on DRDY')
             break
 
 def read_adc():
+    set_cs(0)
     i = 0
     while True:
         i += 1
@@ -32,9 +45,10 @@ def read_adc():
         if spi.readbytes(1)[0] & 0x40 != 0:
             break
         if i >= 400000:
-            print('timeout')
+            print('timeout on read')
             return -1
     buf = spi.readbytes(4)
+    set_cs(1)
     read = (buf[0]<<24) & 0xff000000 | (buf[1]<<16) & 0xff0000 | (buf[2]<<8) & 0xff00 | buf[3] & 0xff
 
     return read
@@ -42,6 +56,7 @@ def read_adc():
 def setup():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(DRDY, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(CS, GPIO.OUT)
 
     spi.open(0, 1)
     spi.max_speed_hz = 2000000
@@ -103,6 +118,7 @@ def setup():
     spi.writebytes([0x08])
 
 DRDY = 26
+CS = 16
 spi = spidev.SpiDev()
 setup()
 wait_drdy()

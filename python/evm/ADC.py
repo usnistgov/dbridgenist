@@ -130,16 +130,3 @@ class ADC():
         self.spi.close()
         GPIO.cleanup()
         sys.exit()
-
-#try:
-#    while True:
-#        val = read_adc()
-#        if val == -1:
-#            val = "CAN'T READ"
-#        else:
-#            val = val * REF / 0x7fffffff
-#        print(str(val) + '          ', end='\r')
-
-#except KeyboardInterrupt:
-#    print("Data collection stopped")
-#    exit_clean()

@@ -120,6 +120,7 @@ def setup():
 def exit_clean():
     spi.close()
     GPIO.cleanup()
+    sys.exit()
 
 DRDY = 26
 CS = 16

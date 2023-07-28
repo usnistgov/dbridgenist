@@ -3,19 +3,27 @@ import RPi.GPIO as GPIO
 import sys
 
 def read_register(reg):
-	spi.writebytes([0x20 | reg, 0x00])
-	result = spi.readbytes(1)
-	return result
+    spi.writebytes([0x20 | reg, 0x00])
+    result = spi.readbytes(1)
+    return result
 
 def write_register(reg, data):
-	spi.writebytes([0x40 | reg, 0x00, data])
+    spi.writebytes([0x40 | reg, 0x00, data])
 
 def get_id():
-	return read_register(0)[0]>>5
+    return read_register(0)[0]>>5
+
+def wait_drdy():
+    i = 0
+    while True:
+        i += 1
+        if GPIO.input(DRDY) == 0:
+            break
+        if i >= 400000:
+            print('timeout')
+            break
 
 def setup():
-    DRDY = 26
-    
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(DRDY, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
@@ -69,5 +77,7 @@ def setup():
         
     spi.writebytes([0x08])
 
+DRDY = 26
 spi = spidev.SpiDev()
 setup()
+wait_drdy()

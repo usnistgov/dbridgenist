@@ -46,19 +46,20 @@ class ADC():
     
     def read_adc(self):
         self.set_cs(0)
-        i = 0
-        while True:
-            i += 1
-            self.spi.writebytes([0x12])
+        #i = 0
+       # while True:
+        #    i += 1
+        self.spi.writebytes([0x12])
     
-            if self.spi.readbytes(1)[0] & 0x40 != 0:
-                break
-            if i >= 400000:
-                print('timeout on read')
-                return -1
-        buf = self.spi.readbytes(4)
+            #if self.spi.readbytes(1)[0] & 0x40 != 0:
+             #   break
+            #if i >= 400000:
+        #        print('timeout on read')
+             #   return -1
+        buf = self.spi.readbytes(6)
+        status = buf[0]
         self.set_cs(1)
-        read = (buf[0]<<24) & 0xff000000 | (buf[1]<<16) & 0xff0000 | (buf[2]<<8) & 0xff00 | buf[3] & 0xff
+        read = (buf[1]<<24) & 0xff000000 | (buf[2]<<16) & 0xff0000 | (buf[3]<<8) & 0xff00 | buf[4] & 0xff
     
         return read
     
@@ -83,8 +84,7 @@ class ADC():
         self.spi.writebytes([0x0A])
         
         GAIN = 0
-        mode2 = 0x80
-        mode2 |= (GAIN << 4) | 0xf
+        mode2= 0x8f | (GAIN << 4) 
         self.write_register(0x05, mode2)
         if self.read_register(0x05)[0] == mode2:
         	print("DRATE set")

@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import spidev
 import RPi.GPIO as GPIO
 import sys

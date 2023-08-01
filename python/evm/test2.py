@@ -1,7 +1,7 @@
 import ADC
 
 REF = 4.774
-adc = ADC.ADC(REF)
+adc = ADC.ADC(REF, 0)
 
 def int2float(num, REF):
     tmp = 0x100000000

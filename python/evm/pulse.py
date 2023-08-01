@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import ADC
 import RPi.GPIO as GPIO
 import time

@@ -27,7 +27,7 @@ try:
         GPIO.output(START, GPIO.HIGH)
         val = adc.read_adc_pulse()
         GPIO.output(START, GPIO.LOW)
-        print(int2float(val), end = '\r')
+        print(int2float(val, REF), end = '\r')
         sleep(0.1)
         
 except KeyboardInterrupt:

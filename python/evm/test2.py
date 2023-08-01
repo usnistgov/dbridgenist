@@ -14,13 +14,14 @@ def int2float(num, REF):
 try:
 	print("01234567890123456789012345678901234567890")
 	while True:
-		val = adc.read_adc()
+		adc.wait_drdy()
+		status, val = adc.read_adc()
 		if val == -1:
 			val == "CAN'T READ"
 		else:
 			#val = int2float(val, REF)
 			pass
-		print(format(val, '032b') + " " + str(int2float(val, REF)), end='\r')
+		print(format(val, '032b') + " " + bin(status) + " " + str(int2float(val, REF))) #, end='\r')
 
 except KeyboardInterrupt:
 	print("\nData collection stopped")

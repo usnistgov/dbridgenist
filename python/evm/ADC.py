@@ -52,7 +52,7 @@ class ADC():
         read = (buf[1]<<24) & 0xff000000 | (buf[2]<<16) & 0xff0000 | \
         (buf[3]<<8) & 0xff00 | buf[4] & 0xff
     
-        return read
+        return status, read
     
     def read_adc_pulse(self):
         self.set_cs(0)

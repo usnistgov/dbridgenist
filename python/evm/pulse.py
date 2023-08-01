@@ -42,7 +42,7 @@ while True:
     try:
         while not done:
             adc.wait_drdy()
-            val = adc.read_adc()
+            status, val = adc.read_adc()
             ret = struct.pack('>l', val)
             ser.write(ret)
             #print(int2float(val, REF), end = '\r')

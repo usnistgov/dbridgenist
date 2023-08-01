@@ -24,9 +24,16 @@ def int2float(num, REF):
         
 try:
     while True:
-        GPIO.output(START, GPIO.HIGH)
-        val = adc.read_adc_pulse()
         GPIO.output(START, GPIO.LOW)
+        sleep(0.01)
+        GPIO.output(START, GPIO.HIGH)
+        sleep(0.01)
+        GPIO.output(START, GPIO.LOW)
+        sleep(0.01)
+        GPIO.output(START, GPIO.HIGH)
+        adc.wait_drdy()
+        val = adc.read_adc_pulse()
+        
         print(int2float(val, REF), end = '\r')
         sleep(0.1)
         

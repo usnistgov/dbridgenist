@@ -31,4 +31,4 @@ try:
         print(int2float(val, REF), end = '\r')
         
 except KeyboardInterrupt:
-    pass
+    GPIO.cleanup()

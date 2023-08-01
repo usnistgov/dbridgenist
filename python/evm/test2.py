@@ -5,7 +5,7 @@ adc = ADC.ADC(REF)
 
 def int2float(num, REF):
 	if num >> 31 == 1:
-		return num * REF / 0x80000000
+		return (~num+1) * REF / 0x80000000
 	else:
 		return num * REF / 0x7fffffff
 

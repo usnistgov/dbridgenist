@@ -65,7 +65,6 @@ class ADC():
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.DRDY, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(self.CS, GPIO.OUT)
-        GPIO.setup(self.START, GPIO.OUT)
     
         self.spi.open(0, 1)
         self.spi.max_speed_hz = 2000000

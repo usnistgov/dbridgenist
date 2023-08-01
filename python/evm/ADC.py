@@ -3,13 +3,17 @@ import RPi.GPIO as GPIO
 import sys
 
 class ADC():
-    def __init__(self, REF, mode=0):
+    def __init__(self, REF, mode=0,verbose=0):
+        self.verbose = verbose
         self.DRDY = 26
         self.CS = 16
         self.spi = spidev.SpiDev()
         self.setup(mode)
         self.wait_drdy()
         self.REF = REF
+        
+        
+
     
     def set_cs(self, state):
         if state == 0:
@@ -39,7 +43,7 @@ class ADC():
         while GPIO.input(self.DRDY) != 0:
             i += 1
             if i >= 400000:
-                print('timeout on DRDY')
+                if self.verbose: print('timeout on DRDY')
                 return False
         return True
     
@@ -76,9 +80,9 @@ class ADC():
         
         id = self.get_id()
         if id == 0x01:
-        	print("ID Read success")
+        	if self.verbose: print("ID Read success")
         else:
-        	print("ID Read failed")
+        	if self.verbose: print("ID Read failed")
         	self.exit_clean()
         self.spi.writebytes([0x0A])
         
@@ -86,17 +90,17 @@ class ADC():
         mode2= 0x8f | (GAIN << 4) 
         self.write_register(0x05, mode2)
         if self.read_register(0x05)[0] == mode2:
-        	print("DRATE set")
+        	if self.verbose: print("DRATE set")
         else:
-        	print("DRATE set failed (MODE2)")
+        	if self.verbose: print("DRATE set failed (MODE2)")
         	self.exit_clean()
         
         refmux = 0x24
         self.write_register(0x0f, refmux)
         if self.read_register(0x0f)[0] == refmux:
-        	print("REF voltage set")
+        	if self.verbose: print("REF voltage set")
         else:
-        	print("REF voltage set failed (REFMUX)")
+        	if self.verbose: print("REF voltage set failed (REFMUX)")
         	self.exit_clean()
         
         #mode0 = 0x00 | (mode << 7)
@@ -106,25 +110,25 @@ class ADC():
             mode0=0x40
         self.write_register(0x03, mode0)
         if self.read_register(0x03)[0] == mode0:
-        	print("Delay set")
+        	if self.verbose: print("Delay set")
         else:
-        	print("Delay set failed (MODE0)")
+        	if self.verbose: print("Delay set failed (MODE0)")
         	self.exit_clean()
         
         mode1 = 0x84
         self.write_register(0x04, mode1)
         if self.read_register(0x04)[0] == mode1:
-        	print("Filter set")
+        	if self.verbose: print("Filter set")
         else:
-        	print("Filter set failed (MODE1)")
+        	if self.verbose: print("Filter set failed (MODE1)")
         	self.exit_clean()
             
         inpmux = 0x0a
         self.write_register(0x06, inpmux)
         if self.read_register(0x06)[0] == inpmux:
-            print("Channel set")
+            if self.verbose: print("Channel set")
         else:
-            print("Channel set failed (INPMUX)")
+            if self.verbose: print("Channel set failed (INPMUX)")
             self.exit_clean()
     
         self.spi.writebytes([0x08])

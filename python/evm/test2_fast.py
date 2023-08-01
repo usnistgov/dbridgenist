@@ -3,7 +3,7 @@ import ADC
 import time
 
 REF = 4.774
-adc = ADC.ADC(REF, 0)
+adc = ADC.ADC(REF, 1)
 
 def int2float(num, REF):
 	tmp = 0x100000000
@@ -12,15 +12,19 @@ def int2float(num, REF):
 	else:
 		return num * REF / 0x7fffffff
 
-N=2000
+N=200
 fi = open('data.dat','w')
 start = time.time()
-for i in range(N):
+i=0
+while i<N:
 	adc.wait_drdy()
 	status, val = adc.read_adc()
-	fi.write('{:10.8f}\n'.format(str(int2float(val, REF)))) #, end='\r')
-	if i%10==0:
-		print('{:10.8f}\n'.format(str(int2float(val, REF)))) #, end='\r')
+	if status & 0x40!=0x40:
+		continue
+	i=i+1
+	fi.write('{:10.8f}\n'.format(int2float(val, REF))) #, end='\r')
+	if i%1==0:
+		print('{0:10.8f} {1:08b}'.format(int2float(val, REF),status)) #, end='\r')
 fi.close()
 stop = time.time()
 delta=stop-start

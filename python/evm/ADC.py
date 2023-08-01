@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 import sys
 
 class ADC():
-    def __init__(self, REF, mode):
+    def __init__(self, REF, mode=0):
         self.DRDY = 26
         self.CS = 16
         self.spi = spidev.SpiDev()
@@ -36,13 +36,12 @@ class ADC():
     
     def wait_drdy(self):
         i = 0
-        while True:
+        while GPIO.input(self.DRDY) != 0:
             i += 1
-            if GPIO.input(self.DRDY) == 0:
-                break
             if i >= 400000:
                 print('timeout on DRDY')
-                break
+                return False
+        return True
     
     def read_adc(self):
         self.set_cs(0)
@@ -50,7 +49,8 @@ class ADC():
         buf = self.spi.readbytes(6)
         status = buf[0]
         self.set_cs(1)
-        read = (buf[1]<<24) & 0xff000000 | (buf[2]<<16) & 0xff0000 | (buf[3]<<8) & 0xff00 | buf[4] & 0xff
+        read = (buf[1]<<24) & 0xff000000 | (buf[2]<<16) & 0xff0000 | \
+        (buf[3]<<8) & 0xff00 | buf[4] & 0xff
     
         return read
     
@@ -59,7 +59,8 @@ class ADC():
         buf = self.spi.readbytes(6)
         self.set_cs(1)
         
-        return (buf[1]<<24) & 0xff000000 | (buf[2]<<16) & 0xff0000 | (buf[3]<<8) & 0xff00 | buf[4] & 0xff
+        return (buf[1]<<24) & 0xff000000 | (buf[2]<<16) & 0xff0000 |\
+        (buf[3]<<8) & 0xff00 | buf[4] & 0xff
         
     def setup(self, mode):  #mode: 1=pulse, 0=continuous
         GPIO.setmode(GPIO.BCM)
@@ -98,7 +99,11 @@ class ADC():
         	print("REF voltage set failed (REFMUX)")
         	self.exit_clean()
         
-        mode0 = 0x00 | (mode << 7)
+        #mode0 = 0x00 | (mode << 7)
+        if mode==0:
+            mode0=0
+        else:
+            mode0=0x40
         self.write_register(0x03, mode0)
         if self.read_register(0x03)[0] == mode0:
         	print("Delay set")

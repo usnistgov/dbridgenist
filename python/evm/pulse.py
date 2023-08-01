@@ -32,7 +32,7 @@ try:
         sleep(0.01)
         GPIO.output(START, GPIO.HIGH)
         adc.wait_drdy()
-        val = adc.read_adc_pulse()
+        val = adc.read_adc()
         
         print(int2float(val, REF), end = '\r')
         sleep(0.1)

@@ -49,4 +49,5 @@ for j in range(3):
 	fi.close()
 	stop = time.time()
 	delta=stop-start
-	print('Taking {0} data took {1} s or {2} s per pt'.format(N,delta,delta/N))
+	print('Taking {0} data took {1:8.3f} s or {2:9.6f} ms per pt cs={3:9.6f} kHz '.\
+	   format(N,delta,delta*1000/N,2*N/delta/1000))

@@ -17,13 +17,13 @@ def int2float(num, REF):
 bd = '/home/wbalance/data'
 N=20000
 skip=1000
-start = time.time()
-now = datetime.datetime.now()
-i=0
-extra=0
-ch1data=[]
-ch2data=[]
 for j in range(3):
+	start = time.time()
+	now = datetime.datetime.now()
+	i=0
+	extra=0
+	ch1data=[]
+	ch2data=[]
 	while i<N:
 		#adc.change_channel(i%2, (i%2)*3)
 		adc.change_channel(i%2,0)

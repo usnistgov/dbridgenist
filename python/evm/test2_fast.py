@@ -26,12 +26,13 @@ while i<N:
 	if status & 0x40!=0x40:
 		extra+=1
 		continue
-	if i%2 == 0:
-		ch1data.append(val)
-	else:
-		ch2data.append(val)
-	if i%skip==0:
-		print('{0:10.8f} {1:08b} {2} {3}'.format(int2float(val, REF),status,extra,iwait)) #, end='\r')
+	if i>=2:
+		if i%2 == 0 :
+			ch1data.append(val)
+		else:
+			ch2data.append(val)
+		if i%skip==0:
+			print('{0:10.8f} {1:08b} {2} {3}'.format(int2float(val, REF),status,extra,iwait)) #, end='\r')
 	extra=0
 	i=i+1
 fi = open('data.dat','w')

@@ -12,19 +12,23 @@ def int2float(num, REF):
 	else:
 		return num * REF / 0x7fffffff
 
-N=200
+N=20000
+skip=1000
 fi = open('data.dat','w')
 start = time.time()
 i=0
+extra=0
 while i<N:
 	adc.wait_drdy()
 	status, val = adc.read_adc()
 	if status & 0x40!=0x40:
+		extra+=1
 		continue
 	i=i+1
 	fi.write('{:10.8f}\n'.format(int2float(val, REF))) #, end='\r')
-	if i%1==0:
-		print('{0:10.8f} {1:08b}'.format(int2float(val, REF),status)) #, end='\r')
+	if i%skip==0:
+		print('{0:10.8f} {1:08b} {2}'.format(int2float(val, REF),status,extra)) #, end='\r')
+	extra=0
 fi.close()
 stop = time.time()
 delta=stop-start

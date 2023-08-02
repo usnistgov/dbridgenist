@@ -21,7 +21,7 @@ j=0
 extra=0
 while i<N:
 	adc.change_channel(j)
-	adc.wait_drdy()
+	iwait = adc.wait_drdy()
 	status, val = adc.read_adc()
 	if status & 0x40!=0x40:
 		extra+=1
@@ -33,7 +33,7 @@ while i<N:
 		fi.write('{:10.8f}\n'.format(int2float(val, REF))) #, end='\r')
 	
 	if i%skip==0:
-		print('{0:10.8f} {1:08b} {2}'.format(int2float(val, REF),status,extra)) #, end='\r')
+		print('{0:10.8f} {1:08b} {2} {3}'.format(int2float(val, REF),status,extra,iwait)) #, end='\r')
 	extra=0
 	j = (j+1) % 2
 fi.close()

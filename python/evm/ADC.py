@@ -35,14 +35,14 @@ class ADC():
     def get_id(self):
         return self.read_register(0)[0]>>5
     
-    def wait_drdy(self):
+    def wait_drdy(self,imax=400000):
         i = 0
         while GPIO.input(self.DRDY) != 0:
             i += 1
-            if i >= 400000:
+            if i >= imax:
                 if self.verbose: print('timeout on DRDY')
-                return False
-        return True
+                return i
+        return i
     
     def change_channel(self, channel, gnd=0):
         self.set_cs(0)
@@ -79,7 +79,7 @@ class ADC():
         GPIO.setup(self.CS, GPIO.OUT)
     
         self.spi.open(0, 1)
-        self.spi.max_speed_hz = 2000000
+        self.spi.max_speed_hz = 4000000
         self.spi.mode = 0b01 # Clock polarity = 0 (clock idles low), 
                              # clock phase = 1 (data sampled on falling edge, shifted on rising edge)
     

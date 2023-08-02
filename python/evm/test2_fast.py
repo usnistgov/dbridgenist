@@ -36,8 +36,8 @@ while i<N:
 	i=i+1
 fi = open('data.dat','w')
 for a,b in zip(ch1data,ch2data):
-	fi.write('{:10.8f} '.format(int2float(a, REF))) #, end='\r')	
-	fi.write('{:10.8f}\n'.format(int2float(b, REF))) #, end='\r')			
+	fi.write('{:11.9f} '.format(int2float(a, REF))) #, end='\r')	
+	fi.write('{:11.9f}\n'.format(int2float(b, REF))) #, end='\r')			
 fi.close()
 stop = time.time()
 delta=stop-start

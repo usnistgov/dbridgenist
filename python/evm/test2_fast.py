@@ -20,7 +20,7 @@ i=0
 j=0
 extra=0
 while i<N:
-	adc.change_channel(j)
+	adc.change_channel(j, j*3)
 	iwait = adc.wait_drdy()
 	status, val = adc.read_adc()
 	if status & 0x40!=0x40:

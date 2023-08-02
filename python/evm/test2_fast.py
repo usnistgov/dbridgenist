@@ -14,28 +14,30 @@ def int2float(num, REF):
 
 N=20000
 skip=1000
-fi = open('data.dat','w')
 start = time.time()
 i=0
-j=0
 extra=0
+ch1data=[]
+ch2data=[]
 while i<N:
-	adc.change_channel(j, j*3)
+	adc.change_channel(i%2, (i%2)*3)
 	iwait = adc.wait_drdy()
 	status, val = adc.read_adc()
 	if status & 0x40!=0x40:
 		extra+=1
 		continue
-	i=i+1
-	if j == 0:
-		fi.write('{:10.8f} '.format(int2float(val, REF))) #, end='\r')
-	elif j == 1:
-		fi.write('{:10.8f}\n'.format(int2float(val, REF))) #, end='\r')
-	
+	if i%2 == 0:
+		ch1data.append(val)
+	else:
+		ch2data.append(val)
 	if i%skip==0:
 		print('{0:10.8f} {1:08b} {2} {3}'.format(int2float(val, REF),status,extra,iwait)) #, end='\r')
 	extra=0
-	j = (j+1) % 2
+	i=i+1
+fi = open('data.dat','w')
+for a,b in zip(ch1data,ch2data):
+	fi.write('{:10.8f} '.format(int2float(a, REF))) #, end='\r')	
+	fi.write('{:10.8f}\n'.format(int2float(b, REF))) #, end='\r')			
 fi.close()
 stop = time.time()
 delta=stop-start

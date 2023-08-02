@@ -41,13 +41,13 @@ for j in range(3):
 				print('{0:10.8f} {1:08b} {2} {3}'.format(int2float(val, REF),status,extra,iwait)) #, end='\r')
 		extra=0
 		i=i+1
+	stop = time.time()
 	fn ='data_'+now.strftime('%Y%m%d_%H%M%S')+'.dat'
 	fi = open(os.path.join(bd,fn),'w')
 	for a,b in zip(ch1data,ch2data):
 		fi.write('{:11.9f} '.format(int2float(a, REF))) #, end='\r')	
 		fi.write('{:11.9f}\n'.format(int2float(b, REF))) #, end='\r')			
 	fi.close()
-	stop = time.time()
 	delta=stop-start
-	print('Taking {0} data took {1:8.3f} s or {2:9.6f} ms per pt cs={3:9.6f} kHz '.\
-	   format(N,delta,delta*1000/N,2*N/delta/1000))
+	print('Taking {0} data took {1:8.3f} s or {2:9.3f} ms per pt cs={3:9.3f} kHz '.\
+	   format(N,delta,delta*1000/N,N/delta/1000))

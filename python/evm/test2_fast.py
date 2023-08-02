@@ -20,7 +20,8 @@ extra=0
 ch1data=[]
 ch2data=[]
 while i<N:
-	adc.change_channel(i%2, (i%2)*3)
+	#adc.change_channel(i%2, (i%2)*3)
+	adc.change_channel(i%2,0)
 	iwait = adc.wait_drdy()
 	status, val = adc.read_adc()
 	if status & 0x40!=0x40:

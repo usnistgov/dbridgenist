@@ -17,18 +17,25 @@ skip=1000
 fi = open('data.dat','w')
 start = time.time()
 i=0
+j=0
 extra=0
 while i<N:
+	adc.change_channel(j)
 	adc.wait_drdy()
 	status, val = adc.read_adc()
 	if status & 0x40!=0x40:
 		extra+=1
 		continue
 	i=i+1
-	fi.write('{:10.8f}\n'.format(int2float(val, REF))) #, end='\r')
+	if j == 0:
+		fi.write('{:10.8f} '.format(int2float(val, REF))) #, end='\r')
+	elif j == 1:
+		fi.write('{:10.8f}\n'.format(int2float(val, REF))) #, end='\r')
+	
 	if i%skip==0:
 		print('{0:10.8f} {1:08b} {2}'.format(int2float(val, REF),status,extra)) #, end='\r')
 	extra=0
+	j = (j+1) % 2
 fi.close()
 stop = time.time()
 delta=stop-start

@@ -15,9 +15,10 @@ def int2float(num, REF):
 		return num * REF / 0x7fffffff
 
 bd = '/home/wbalance/data'
-N=20000
+Loops=1
+N=60000
 skip=1000
-for j in range(3):
+for j in range(Loops):
 	start = time.time()
 	now = datetime.datetime.now()
 	i=0
@@ -38,7 +39,8 @@ for j in range(3):
 			else:
 				ch2data.append(val)
 			if i%skip==0:
-				print('{0:10.8f} {1:08b} {2} {3}'.format(int2float(val, REF),status,extra,iwait)) #, end='\r')
+				print('{4}: {0:10.8f} {1:08b} {2} {3}'.\
+			  format(int2float(val, REF),status,extra,iwait,i)) #, end='\r')
 		extra=0
 		i=i+1
 	stop = time.time()

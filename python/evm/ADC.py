@@ -44,9 +44,9 @@ class ADC():
                 return False
         return True
     
-    def change_channel(self, channel):
+    def change_channel(self, channel, gnd=0):
         self.set_cs(0)
-        inpmux = 0x0a | (channel << 4) # First 4 bits are positive input, last 4 are negative input
+        inpmux = (0x0a - gnd) | (channel << 4) # First 4 bits are positive input, last 4 are negative input
         self.write_register(0x06, inpmux)
         if self.read_register(0x06)[0] == inpmux:
             #if self.verbose: print("Channel set")

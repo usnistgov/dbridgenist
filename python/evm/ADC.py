@@ -11,9 +11,6 @@ class ADC():
         self.setup(mode)
         self.wait_drdy()
         self.REF = REF
-        
-        
-
     
     def set_cs(self, state):
         if state == 0:
@@ -47,6 +44,16 @@ class ADC():
                 return False
         return True
     
+    def change_channel(self, channel):
+        self.set_cs(0)
+        inpmux = 0x0a | (channel << 4) # First 4 bits are positive input, last 4 are negative input
+        self.write_register(0x06, inpmux)
+        if self.read_register(0x06)[0] == inpmux:
+            #if self.verbose: print("Channel set")
+            pass
+        else:
+            if self.verbose: print("Channel set failed (INPMUX)")
+    
     def read_adc(self):
         self.set_cs(0)
         self.spi.writebytes([0x12])
@@ -54,7 +61,7 @@ class ADC():
         status = buf[0]
         self.set_cs(1)
         read = (buf[1]<<24) & 0xff000000 | (buf[2]<<16) & 0xff0000 | \
-        (buf[3]<<8) & 0xff00 | buf[4] & 0xff
+        (buf[3]<<8) & 0xff00 | buf[4] & 0xff # Arrange bytes in order
     
         return status, read
     
@@ -73,10 +80,11 @@ class ADC():
     
         self.spi.open(0, 1)
         self.spi.max_speed_hz = 2000000
-        self.spi.mode = 0b01
+        self.spi.mode = 0b01 # Clock polarity = 0 (clock idles low), 
+                             # clock phase = 1 (data sampled on falling edge, shifted on rising edge)
     
-        self.spi.writebytes([0x06])
-        self.spi.writebytes([0x0a])
+        self.spi.writebytes([0x06]) # Send reset command
+        self.spi.writebytes([0x0a]) # Send stop command
         
         id = self.get_id()
         if id == 0x01:

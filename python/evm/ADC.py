@@ -53,6 +53,7 @@ class ADC():
             pass
         else:
             if self.verbose: print("Channel set failed (INPMUX)")
+        self.set_cs(1)
     
     def read_adc(self):
         self.set_cs(0)
@@ -79,7 +80,7 @@ class ADC():
         GPIO.setup(self.CS, GPIO.OUT)
     
         self.spi.open(0, 1)
-        self.spi.max_speed_hz = 4000000
+        self.spi.max_speed_hz = 31250000
         self.spi.mode = 0b01 # Clock polarity = 0 (clock idles low), 
                              # clock phase = 1 (data sampled on falling edge, shifted on rising edge)
     

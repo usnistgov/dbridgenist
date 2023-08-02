@@ -48,11 +48,11 @@ class ADC():
         self.set_cs(0)
         inpmux = (0x0a - gnd) | (channel << 4) # First 4 bits are positive input, last 4 are negative input
         self.write_register(0x06, inpmux)
-        if self.read_register(0x06)[0] == inpmux:
-            #if self.verbose: print("Channel set")
-            pass
-        else:
-            if self.verbose: print("Channel set failed (INPMUX)")
+        #if self.read_register(0x06)[0] == inpmux:
+        #    #if self.verbose: print("Channel set")
+        #    pass
+        #else:
+        #    if self.verbose: print("Channel set failed (INPMUX)")
         self.set_cs(1)
     
     def read_adc(self):
@@ -124,7 +124,8 @@ class ADC():
         	if self.verbose: print("Delay set failed (MODE0)")
         	self.exit_clean()
         
-        mode1 = 0x84
+        #mode1 = 0x84
+        mode1 = 0x04
         self.write_register(0x04, mode1)
         if self.read_register(0x04)[0] == mode1:
         	if self.verbose: print("Filter set")

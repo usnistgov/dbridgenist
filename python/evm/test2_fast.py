@@ -17,7 +17,7 @@ def int2float(num, REF):
 bd = '/home/wbalance/data'
 Loops=1
 N=60000
-skip=1000
+skip=10000
 for j in range(Loops):
 	start = time.time()
 	now = datetime.datetime.now()

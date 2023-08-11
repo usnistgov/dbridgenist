@@ -48,39 +48,26 @@ class ADC():
         self.set_cs(0)
         inpmux = (0x0a - gnd) | (channel << 4) # First 4 bits are positive input, last 4 are negative input
         self.write_register(0x06, inpmux)
-        #if self.read_register(0x06)[0] == inpmux:
-        #    #if self.verbose: print("Channel set")
-        #    pass
-        #else:
-        #    if self.verbose: print("Channel set failed (INPMUX)")
         self.set_cs(1)
     
     def read_adc(self):
         self.set_cs(0)
         self.spi.writebytes([0x12])
-        buf = self.spi.readbytes(6)
+        buf = self.spi.readbytes(6) # status byte, four data bytes, checksum byte
         status = buf[0]
         self.set_cs(1)
         read = (buf[1]<<24) & 0xff000000 | (buf[2]<<16) & 0xff0000 | \
         (buf[3]<<8) & 0xff00 | buf[4] & 0xff # Arrange bytes in order
     
         return status, read
-    
-    def read_adc_pulse(self):
-        self.set_cs(0)
-        buf = self.spi.readbytes(6)
-        self.set_cs(1)
-        
-        return (buf[1]<<24) & 0xff000000 | (buf[2]<<16) & 0xff0000 |\
-        (buf[3]<<8) & 0xff00 | buf[4] & 0xff
-        
+
     def setup(self, mode):  #mode: 1=pulse, 0=continuous
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.DRDY, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(self.CS, GPIO.OUT)
     
         self.spi.open(0, 1)
-        self.spi.max_speed_hz = 31250000
+        self.spi.max_speed_hz = 31250000 # max speed = 3.125 MHz, must be divided by a multiple of 2
         self.spi.mode = 0b01 # Clock polarity = 0 (clock idles low), 
                              # clock phase = 1 (data sampled on falling edge, shifted on rising edge)
     
@@ -88,7 +75,7 @@ class ADC():
         self.spi.writebytes([0x0a]) # Send stop command
         
         id = self.get_id()
-        if id == 0x01:
+        if id == 0x01: # default = 0010xxxx for ADS1263
         	if self.verbose: print("ID Read success")
         else:
         	if self.verbose: print("ID Read failed")
@@ -96,7 +83,7 @@ class ADC():
         self.spi.writebytes([0x0A])
         
         GAIN = 0
-        mode2= 0x8f | (GAIN << 4) 
+        mode2= 0x8f | (GAIN << 4) # see datasheet for mode2 register info
         self.write_register(0x05, mode2)
         if self.read_register(0x05)[0] == mode2:
         	if self.verbose: print("DRATE set")
@@ -104,7 +91,7 @@ class ADC():
         	if self.verbose: print("DRATE set failed (MODE2)")
         	self.exit_clean()
         
-        refmux = 0x24
+        refmux = 0x24 # set reference voltage inputs, see datasheet
         self.write_register(0x0f, refmux)
         if self.read_register(0x0f)[0] == refmux:
         	if self.verbose: print("REF voltage set")
@@ -112,7 +99,7 @@ class ADC():
         	if self.verbose: print("REF voltage set failed (REFMUX)")
         	self.exit_clean()
         
-        #mode0 = 0x00 | (mode << 7)
+        # 0x40 is pulse mode, 0x00 is continuous mode
         if mode==0:
             mode0=0
         else:
@@ -125,7 +112,7 @@ class ADC():
         	self.exit_clean()
         
         #mode1 = 0x84
-        mode1 = 0x04
+        mode1 = 0x04 # set filter, see daatasheet for modes
         self.write_register(0x04, mode1)
         if self.read_register(0x04)[0] == mode1:
         	if self.verbose: print("Filter set")
@@ -133,7 +120,7 @@ class ADC():
         	if self.verbose: print("Filter set failed (MODE1)")
         	self.exit_clean()
             
-        inpmux = 0x0a
+        inpmux = 0x0a # set input voltage multiplexer, see datasheet
         self.write_register(0x06, inpmux)
         if self.read_register(0x06)[0] == inpmux:
             if self.verbose: print("Channel set")

@@ -10,7 +10,7 @@ adc = ADC.ADC(REF, 1)
 def int2float(num, REF):
 	tmp = 0x100000000
 	if num >> 31 == 1:
-		return -(tmp-num) * REF / 0x80000000
+		return -(tmp-num) * REF / 0x80000000 # invert by subtraction from 2^N
 	else:
 		return num * REF / 0x7fffffff
 
@@ -26,11 +26,10 @@ for j in range(Loops):
 	ch1data=[]
 	ch2data=[]
 	while i<N:
-		#adc.change_channel(i%2, (i%2)*3)
-		adc.change_channel(i%2,0)
+		adc.change_channel(i%2,0) # switch channels
 		iwait = adc.wait_drdy()
 		status, val = adc.read_adc()
-		if status & 0x40!=0x40:
+		if status & 0x40!=0x40: # check status byte, second bit 1 = new data
 			extra+=1
 			continue
 		if i>=2:
